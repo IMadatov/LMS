@@ -1,0 +1,36 @@
+<mat-toolbar style="background-color: rgb(20, 20, 70); color: gainsboro">
+  <button
+    (click)="headerService.ActiveSideBar()"
+    mat-icon-button
+    class="example-icon"
+    aria-label="Example icon-button with menu icon"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      x="0px"
+      y="0px"
+      width="100"
+      height="100"
+      viewBox="0 0 50 50"
+      class="text-gray-200"
+    >
+      <path
+        d="M 0 9 L 0 11 L 50 11 L 50 9 Z M 0 24 L 0 26 L 50 26 L 50 24 Z M 0 39 L 0 41 L 50 41 L 50 39 Z"
+      ></path>
+    </svg>
+  </button>
+  <div class="flex justify-between w-full ">
+    <a href="/">
+      <span class="hidden md:block">Learing Managment System</span>
+      <span class="block md:hidden">LMS</span>
+    </a>
+
+    <div class="flex gap-5">
+      <div ><button class="w-8 h-8 flex justify-center items-center border rounded border-gray-400" (click)="themeService.toolbarToggle()"><i class="pi" [ngClass]="themeService.getThemeMode()?'pi-moon':'pi-sun'" ></i></button></div> 
+      <div class="hidden md:block"><span>{{'servertimeKey'|transloco}}: </span> {{signalRService.date|date:'H:mm , dd:MM:yyyy'}}</div>
+      <div class="block md:hidden">{{signalRService.date |date:'hh:mm'}}</div>
+    </div>
+  </div>
+</mat-toolbar>
+
+<app-side-bar></app-side-bar>

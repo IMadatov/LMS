@@ -1,0 +1,9 @@
+<div class="card">
+    <p-accordion [activeIndex]="0">
+        <p-accordionTab [header]="tab.title" *ngFor="let tab of tabs">
+            <p class="m-0">
+                {{ tab.content }}
+            </p>
+        </p-accordionTab>
+    </p-accordion>
+</div>

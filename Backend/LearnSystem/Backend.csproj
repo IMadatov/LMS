@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+    <UserSecretsId>9b2b9288-ddc7-4c18-9983-f53f42df3702</UserSecretsId>
+  </PropertyGroup>
+    
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+    <PackageReference Include="Minerals.StringCases" Version="0.2.1" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.6.0" />
+    <PackageReference Include="SignalRSwaggerGen" Version="4.7.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.7.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.7.3" />
+    <PackageReference Include="Telegram.Bot" Version="19.0.0" />
+  </ItemGroup>
+    
+  <ItemGroup>
+    <ProjectReference Include="..\BaseCrud\BaseCrud.Abstractions\BaseCrud.Abstractions.csproj" />
+    <ProjectReference Include="..\BaseCrud\BaseCrud.EntityFrameworkCore\BaseCrud.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\BaseCrud\BaseCrud.PrimeNg\BaseCrud.PrimeNg.csproj" />
+    <ProjectReference Include="..\BaseCrud\BaseCrud\BaseCrud.csproj" />
+    <ProjectReference Include="..\Translation\Application\Application.csproj" />
+	<ProjectReference Include="..\Translation\Domain\Domain.csproj" />
+	<ProjectReference Include="..\Translation\GTranslate\GTranslate.csproj" />
+	<ProjectReference Include="..\Translation\Infrastructure\Infrastructure.csproj" />
+  </ItemGroup>
+    
+  <ItemGroup>
+    <Reference Include="ServiceStatusResult">
+      <HintPath>..\ServiceStatusResult.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  
+
+</Project>

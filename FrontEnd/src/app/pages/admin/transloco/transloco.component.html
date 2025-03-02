@@ -1,0 +1,112 @@
+<div class="pb-5 h-full flex flex-col">
+    <!-- <p-toast></p-toast> -->
+    <p-table 
+    class="flex flex-col h-full gap-0"
+    [value]="translocoTableService.translocoList!" [paginator]="true" [first]="translocoTableService.first"
+        [rows]="translocoTableService.rows" [rowsPerPageOptions]="[5,10,20]"
+        [totalRecords]="translocoTableService.totalItems" dataKey="id" editMode="row"
+        [tableStyle]="{'min-width': '50rem'}" [lazy]="true" (onLazyLoad)="translocoTableService.onPageChange($event)"
+        [customSort]="true" [sortField]="translocoTableService.sortField" [globalFilterFields]="['name']" #dt2>
+        <ng-template pTemplate="caption">
+            <div class="flex">
+                
+                <p-iconField iconPosition="left" class="ml-auto">
+                    <p-inputIcon>
+                        <i class="pi pi-search"></i>
+                    </p-inputIcon>
+                    <input pInputText type="text"  #globalInput (input)="GlobalFilter($event)" placeholder="Search keyword" />
+                </p-iconField>
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="code" style="width:20%">Code <p-sortIcon field="code" /></th>
+                <th pSortableColumn="valueEN" style="width:20%">English <p-sortIcon field="valueEN" /> </th>
+                <th pSortableColumn="valueRU" style="width:20%">Русский <p-sortIcon field="valueR" /> </th>
+                <th pSortableColumn="valueUZ" style="width:20%">O'zbek <p-sortIcon field="valueUZ" /> </th>
+                <th pSortableColumn="valueKR" style="width: 20%">Qaraqalpaq <p-sortIcon field="valueKR" /> </th>
+                <th style="width:20%"></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product let-editing="editing" let-ri="rowIndex">
+            <tr [pEditableRow]="product">
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="product.code" />
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.code}}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="product.valueEN" required />
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.valueEN}}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="product.valueRU" required />
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.valueRU}}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="product.valueUZ" required />
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.valueUZ}}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="product.valueKR" required />
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.valueKR}}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <div class="flex align-items-center justify-content-center gap-2">
+
+                        <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil"
+                            class="p-button-rounded p-button-text"
+                            (click)="translocoTableService.onRowEditInit(product)">
+                        </button>
+
+                        <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check"
+                            class="p-button-rounded p-button-text p-button-success mr-2"
+                            (click)="translocoTableService.onRowEditSave(product)">
+                        </button>
+
+                        <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times"
+                            class="p-button-rounded p-button-text p-button-danger"
+                            (click)="translocoTableService.onRowEditCancel(product, ri)">
+                        </button>
+
+                        <button *ngIf="editing && product.id!=0" pButton pRipple type="button" pCancelEditableRow
+                            icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"
+                            (click)="translocoTableService.onRowDelete(product)">
+                        </button>
+
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

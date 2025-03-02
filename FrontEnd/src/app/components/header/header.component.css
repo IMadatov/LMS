@@ -1,0 +1,7 @@
+:host{
+    ::ng-deep .p-sidebar .p-sidebar-header{
+        background-color:  rgb(20, 20, 70);
+        margin-bottom: 10px;
+        color: white;
+    }
+}

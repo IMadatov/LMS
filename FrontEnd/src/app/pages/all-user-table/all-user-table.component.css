@@ -1,0 +1,20 @@
+:host{
+    ::ng-deep .p-image-preview-container > img {
+        border-radius: 50%;
+      }
+  
+    ::ng-deep .p-image-preview-container:hover > .p-image-preview-indicator{
+        border-radius: 50%;
+    }
+    ::ng-deep   .p-dialog-draggable .p-dialog-header{
+        background-color:  rgb(20, 20, 70);
+        color: white;   
+    }
+    ::ng-deep .p-dialog .p-dialog-header .p-dialog-header-icon:enabled{
+        color: white;
+    }
+    
+    ::ng-deep .p-dialog .p-dialog-header .p-dialog-header-icon:enabled:hover{
+        color: rgba(137, 137, 137, 0.6);
+    }
+}

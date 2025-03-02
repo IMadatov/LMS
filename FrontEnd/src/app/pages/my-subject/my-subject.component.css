@@ -1,0 +1,18 @@
+:host {
+    ::ng-deep   .p-dialog-draggable .p-dialog-header{
+        background-color:  rgb(20, 20, 70);
+        color: white;   
+
+    }
+    ::ng-deep .p-dialog .p-dialog-header .p-dialog-header-icon:enabled{
+        color: white;
+    }
+    
+    ::ng-deep .p-dialog .p-dialog-header .p-dialog-header-icon:enabled:hover{
+        color: rgba(137, 137, 137, 0.6);
+    }
+    ::ng-deep .p-panel-content{
+        padding: 0;
+    }
+}
+

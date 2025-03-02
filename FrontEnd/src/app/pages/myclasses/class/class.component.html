@@ -1,0 +1,22 @@
+<p-panel header="{{classService.currentClass?.name}}">
+    <p-tabMenu
+ [model]="items"
+ [activeItem]="activeItem"
+ (activeItemChange)="onActiveItemChange($event)"
+ />
+
+ @switch (activeItem.label) {
+    @case ("Students"){
+        <app-students/>
+    }
+    @case ("Subjects") {
+        <app-subjects></app-subjects>
+    }
+    @case ("Tests") {
+        <app-tests></app-tests>
+    }
+    @case ("Messages") {
+        <app-messages></app-messages>
+    }
+ }
+</p-panel>

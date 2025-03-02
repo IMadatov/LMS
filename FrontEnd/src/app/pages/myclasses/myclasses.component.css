@@ -1,0 +1,21 @@
+:host{
+  ::ng-deep .p-panel .p-panel-content:last-child{
+    padding: 0;
+  }
+}
+:host {
+  ::ng-deep   .p-dialog-draggable .p-dialog-header{
+      background-color:  rgb(20, 20, 70);
+      color: white;   
+
+  }
+  ::ng-deep .p-panel .p-panel-header{
+    display: none;
+    border-top-left-radius: 40px;
+    border-top-right-radius: 40px;
+  }
+}
+
+.panel{
+  min-height: 90vh;
+}

@@ -1,0 +1,118 @@
+<div style="height: 90vh">
+  <div
+    class="h-full flex md:justify-center px-0 md:px-4 py-1 overflow-x-scroll md:overflow-x-hidden"
+  >
+    <p-panel header="My subjects" class="p-0 md:p-3">
+      <div class="flex flex-col gap-2">
+        <div class="flex gap-5 pl-4 pt-2">
+          <p-button
+            label="Create"
+            severity="success"
+            icon="pi pi-plus"
+            (onClick)="showDialog()"
+          />
+          <p-button
+            label=""
+            severity="danger"
+            icon="pi pi-trash"
+            [disabled]="mysubjectService.selecteds.length==0"
+            (onClick)="mysubjectService.DeleteSubject()"
+          />
+        </div>
+
+        <div >
+          <p-table
+            class="md:min-w-96 min-w-80 p-0 md:p-3"
+            [value]="mysubjectService.listSubjects!"
+            [(selection)]="mysubjectService.selecteds"
+            [lazy]="true"
+            [tableStyle]="{ 'min-width': '25rem' }"
+            [customSort]="true"
+            (onLazyLoad)="mysubjectService.SortFunction($event)"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th class="pr-1 " style="width: 4rem"><p-tableHeaderCheckbox /></th>
+                <th>№</th>
+                <th pSortableColumn="Name">
+                  Subject name <p-sortIcon field="Name" />
+                </th>
+                <th >
+                  At create 
+                </th>
+                <th >
+                  Creator 
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-product as Subject>
+              <tr>
+                <td class="pr-1">@if (authService.currentUser?.id==product.createdBy){<p-tableCheckbox [value]="product" />}</td>
+                <td>{{ mysubjectService.first + product.indexOfItem}}</td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.craetedDate | date : "short" }}</td>
+                <td>
+                  {{product.creator}}
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+          <div class="flex justify-center">
+            <p-paginator
+              (onPageChange)="mysubjectService.onPageChange($event)"
+              [first]="mysubjectService.first!"
+              [rows]="mysubjectService.row!"
+              [totalRecords]="mysubjectService.totalItems"
+              [rowsPerPageOptions]="[2, 5, 10]"
+            />
+          </div>
+        </div>
+      </div>
+    </p-panel>
+  </div>
+</div>
+<div class="card flex justify-content-center">
+  <p-dialog
+    header="Header"
+    [(visible)]="visible"
+    [modal]="false"
+    styleClass="w-full md:w-1/3 "
+  >
+    <ng-template pTemplate="header">
+      <div class="inline-flex align-items-center justify-content-center gap-2">
+        <span class="font-bold white-space-nowrap"> Create subject </span>
+      </div>
+    </ng-template>
+    <form>
+      <div class="flex pt-5 align-items-center gap-3 mb-3">
+        <label for="subjectName" class="font-semibold w-6rem">
+          Name of subject
+        </label>
+        <input
+          id="subjectName"
+          [formControl]="mysubjectService.subjectName"
+          class="px-1 flex-auto border border-gray-600 rounded"
+          autocomplete="off"
+        />
+      </div>
+    </form>
+    <ng-template pTemplate="footer">
+      <p-button
+        label="Create"
+        severity="success"
+        (onClick)="
+          mysubjectService.CreateSubject(
+            mysubjectService.subjectName.value?.toString()!
+          );
+          visible = false
+        "
+      />
+      <p-button
+        label="Cancel"
+        [text]="true"
+        severity="danger"
+        (onClick)="visible = false"
+      />
+    </ng-template>
+  </p-dialog>
+</div>
