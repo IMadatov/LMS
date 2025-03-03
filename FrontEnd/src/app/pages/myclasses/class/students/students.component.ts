@@ -4,11 +4,10 @@ import { CommonModule } from '@angular/common';
 import { PanelModule } from 'primeng/panel';
 import { ButtonModule } from 'primeng/button';
 @Component({
-  selector: 'app-students',
-  standalone: true,
-  imports: [TableModule,CommonModule,PanelModule,ButtonModule],
-  templateUrl: './students.component.html',
-  styleUrl: './students.component.css'
+    selector: 'app-students',
+    imports: [TableModule, CommonModule, PanelModule, ButtonModule],
+    templateUrl: './students.component.html',
+    styleUrl: './students.component.css'
 })
 export class StudentsComponent {
   customers!: any[];

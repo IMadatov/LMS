@@ -3,11 +3,10 @@ import { TabViewModule } from 'primeng/tabview';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-test',
-  standalone: true,
-  imports: [CommonModule,TabViewModule],
-  templateUrl: './test.component.html',
-  styleUrl: './test.component.css'
+    selector: 'app-test',
+    imports: [CommonModule, TabViewModule],
+    templateUrl: './test.component.html',
+    styleUrl: './test.component.css'
 })
 export class TestComponent {
   activeIndex: number = 0;

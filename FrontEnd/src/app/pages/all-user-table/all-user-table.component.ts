@@ -19,27 +19,26 @@ import {RadioButtonModule} from 'primeng/radiobutton'
 import { AuthService } from '../auth/auth.service';
 
 @Component({
-  selector: 'app-all-user-table',
-  standalone: true,
-  imports: [
-    TableModule,
-    TagModule,
-    RatingModule,
-    ButtonModule,
-    CommonModule,
-    MultiSelectModule,
-    FormsModule,
-    DialogModule,
-    AvatarModule,
-    CascadeSelectModule,
-    DropdownModule,
-    PaginatorModule,
-    ImageModule,
-    RadioButtonModule
-  ],
-  providers: [UserService],
-  templateUrl: './all-user-table.component.html',
-  styleUrl: './all-user-table.component.css',
+    selector: 'app-all-user-table',
+    imports: [
+        TableModule,
+        TagModule,
+        RatingModule,
+        ButtonModule,
+        CommonModule,
+        MultiSelectModule,
+        FormsModule,
+        DialogModule,
+        AvatarModule,
+        CascadeSelectModule,
+        DropdownModule,
+        PaginatorModule,
+        ImageModule,
+        RadioButtonModule
+    ],
+    providers: [UserService],
+    templateUrl: './all-user-table.component.html',
+    styleUrl: './all-user-table.component.css'
 })
 export class AllUserTableComponent implements OnInit, OnDestroy {
   count: number = 1;

@@ -12,22 +12,21 @@ import { TranslocoTableService } from './transloco-table.service';
 import{IconFieldModule} from 'primeng/iconfield'
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 @Component({
-  selector: 'app-transloco',
-  standalone: true,
-  imports: [
-    TableModule,
-    CommonModule, 
-    ToastrModule, 
-    TagModule, 
-    DropdownModule, 
-    ButtonModule, 
-    InputTextModule, 
-    FormsModule,
-    InputIconModule,
-    IconFieldModule
-  ],
-  templateUrl: './transloco.component.html',
-  styleUrls: ['./transloco.component.scss'],
+    selector: 'app-transloco',
+    imports: [
+        TableModule,
+        CommonModule,
+        ToastrModule,
+        TagModule,
+        DropdownModule,
+        ButtonModule,
+        InputTextModule,
+        FormsModule,
+        InputIconModule,
+        IconFieldModule
+    ],
+    templateUrl: './transloco.component.html',
+    styleUrls: ['./transloco.component.scss']
 })
 export class TranslocoComponent implements AfterViewChecked ,OnInit,OnDestroy{
   @ViewChild('enterClickSaveBtn') saveBtn: ElementRef<HTMLButtonElement> | undefined;

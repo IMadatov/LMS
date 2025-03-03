@@ -1,0 +1,7 @@
+:host{
+    ::ng-deep .p-drawer-content{
+        width: 100%;
+        max-width: 20rem;
+
+    } 
+}

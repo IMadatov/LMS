@@ -9,17 +9,17 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { ThemeService } from '../../services/theme.service';
 import { ToolbarModule } from 'primeng/toolbar';
 @Component({
-  selector: 'app-header',
-  standalone: true,
-  imports: [
-    SideBarComponent,
-    MenuModule,
-    CommonModule,
-    TranslocoModule,
-    ToolbarModule
-  ],
-  templateUrl: './header.component.html',
-  styleUrl: './header.component.css',
+    selector: 'app-header',
+    imports: [
+        SideBarComponent,
+        MenuModule,
+        CommonModule,
+        TranslocoModule,
+        ToolbarModule
+    ],
+    templateUrl: './header.component.html',
+    styleUrl: './header.component.css',
+    standalone:true
 })
 export class HeaderComponent implements OnInit {
   

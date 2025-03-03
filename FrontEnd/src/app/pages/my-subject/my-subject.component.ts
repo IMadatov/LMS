@@ -9,20 +9,19 @@ import { CommonModule } from '@angular/common';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { AuthService } from '../auth/auth.service';
 @Component({
-  selector: 'app-my-subject',
-  standalone: true,
-  imports: [
-    PanelModule,
-    ButtonModule,
-    TableModule,
-    DialogModule,
-    ReactiveFormsModule,
-    PaginatorModule,
-    CommonModule,
-  ],
-  templateUrl: './my-subject.component.html',
-  styleUrl: './my-subject.component.css',
-  changeDetection:ChangeDetectionStrategy.OnPush
+    selector: 'app-my-subject',
+    imports: [
+        PanelModule,
+        ButtonModule,
+        TableModule,
+        DialogModule,
+        ReactiveFormsModule,
+        PaginatorModule,
+        CommonModule,
+    ],
+    templateUrl: './my-subject.component.html',
+    styleUrl: './my-subject.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MySubjectComponent  {
   constructor(

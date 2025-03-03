@@ -9,19 +9,18 @@ import { MessagesComponent } from "./messages/messages.component";
 import { PanelModule } from 'primeng/panel';
 import { ClassService } from './class.service';
 @Component({
-  selector: 'app-class',
-  standalone: true,
-  imports: [
-    TabMenuModule,
-    CommonModule,
-    StudentsComponent, 
-    SubjectsComponent, 
-    TestsComponent, 
-    MessagesComponent,
-    PanelModule
-  ],
-  templateUrl: './class.component.html',
-  styleUrl: './class.component.css'
+    selector: 'app-class',
+    imports: [
+        TabMenuModule,
+        CommonModule,
+        StudentsComponent,
+        SubjectsComponent,
+        TestsComponent,
+        MessagesComponent,
+        PanelModule
+    ],
+    templateUrl: './class.component.html',
+    styleUrl: './class.component.css'
 })
 export class ClassComponent {
 

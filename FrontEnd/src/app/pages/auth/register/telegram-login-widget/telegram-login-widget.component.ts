@@ -21,11 +21,10 @@ import { TelegramUserData } from '@telegram-auth/server';
 const TELEGRAM_WIDGET_VERSION = 22;
 
 @Component({
-  standalone: true,
-  selector: 'app-telegram-login-widget',
-  imports:[CommonModule],
-  template: `<div  #scriptContainer></div>`,
-  styles: [`
+    selector: 'app-telegram-login-widget',
+    imports: [CommonModule],
+    template: `<div  #scriptContainer></div>`,
+    styles: [`
     .tgme_widget_login.large button.tgme_widget_login_button {
 
   }

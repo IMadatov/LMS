@@ -8,12 +8,10 @@ import { TranslocoService } from '@jsverse/transloco';
 import { Subscription, take } from 'rxjs';
 
 @Component({
-  selector: 'app-home',
-  standalone: true,
-  imports: [HeaderComponent, RouterOutlet],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.css',
-  
+    selector: 'app-home',
+    imports: [HeaderComponent, RouterOutlet],
+    templateUrl: './home.component.html',
+    styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit {
 

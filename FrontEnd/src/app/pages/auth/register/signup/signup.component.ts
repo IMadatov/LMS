@@ -16,11 +16,10 @@ export const reg = RegExp(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,
 );
 
 @Component({
-  selector: 'app-signup',
-  standalone: true,
-  imports: [ReactiveFormsModule,CommonModule,DialogModule,ButtonModule],
-  templateUrl: './signup.component.html',
-  styleUrl: './signup.component.css',
+    selector: 'app-signup',
+    imports: [ReactiveFormsModule, CommonModule, DialogModule, ButtonModule],
+    templateUrl: './signup.component.html',
+    styleUrl: './signup.component.css'
 })
 export class SignupComponent {
  

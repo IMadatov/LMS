@@ -12,22 +12,20 @@ import { SignupComponent } from "./signup/signup.component";
 import { RegisterService } from './register.service';
 
 @Component({
-  standalone: true,
-  selector: 'app-register',
-  styleUrl:'./register.component.css',
-  imports: [
-    DividerModule,
-    ButtonModule,
-    InputTextModule,
-    TelegramLoginWidgetComponent,
-    FloatLabelModule,
-    LoginComponent,
-    CommonModule,
-    SignupComponent,
-    NgIf
-],
-
-  templateUrl:"./register.component.html",
+    selector: 'app-register',
+    styleUrl: './register.component.css',
+    imports: [
+        DividerModule,
+        ButtonModule,
+        InputTextModule,
+        TelegramLoginWidgetComponent,
+        FloatLabelModule,
+        LoginComponent,
+        CommonModule,
+        SignupComponent,
+        NgIf
+    ],
+    templateUrl: "./register.component.html"
 })
 export class RegisterComponent {
 

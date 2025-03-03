@@ -16,11 +16,10 @@ export const reg = RegExp(
 );
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [FloatLabelModule, CommonModule, ReactiveFormsModule],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
+    selector: 'app-login',
+    imports: [FloatLabelModule, CommonModule, ReactiveFormsModule],
+    templateUrl: './login.component.html',
+    styleUrl: './login.component.css'
 })
 export class LoginComponent {
   public isPasswordShow = false;

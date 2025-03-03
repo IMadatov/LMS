@@ -6,16 +6,16 @@ import { FormsModule } from '@angular/forms';
 import { TranslationService } from '../../services/translation.service';
 import { TranslocoModule } from '@jsverse/transloco';
 @Component({
-  selector: 'app-profile',
-  standalone: true,
-  imports: [
-    CommonModule,
-    CascadeSelectModule,
-    FormsModule,
-    TranslocoModule
-  ],
-  templateUrl: './profile.component.html',
-  styleUrl: './profile.component.css'
+    selector: 'app-profile',
+    imports: [
+        CommonModule,
+        CascadeSelectModule,
+        FormsModule,
+        TranslocoModule
+    ],
+    templateUrl: './profile.component.html',
+    styleUrl: './profile.component.css',
+    standalone:true
 })
 export class ProfileComponent implements OnInit{
 

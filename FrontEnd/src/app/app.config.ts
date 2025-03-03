@@ -13,7 +13,8 @@ import { provideToastr } from 'ngx-toastr';
 import { TranslocoHttpLoader } from './transloco-loader';
 import { provideTransloco, provideTranslocoMissingHandler } from '@jsverse/transloco';
 import { CustomMissingHandler } from './custom-missing-handler';
-
+import { providePrimeNG } from 'primeng/config';
+import primengTheme from './primengTheme';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
@@ -39,6 +40,14 @@ export const appConfig: ApplicationConfig = {
       },
       loader: TranslocoHttpLoader,
     }),
-    provideTranslocoMissingHandler(CustomMissingHandler)
+    provideTranslocoMissingHandler(CustomMissingHandler),
+    providePrimeNG({
+      theme:{
+        preset:primengTheme,
+        options:{
+          darkModeSelector:'.dark'
+        }
+      }
+    })
   ],
 };

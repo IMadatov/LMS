@@ -13,25 +13,24 @@ import { PaginatorModule } from 'primeng/paginator';
 import { AuthService } from '../auth/auth.service';
 import { TranslocoDirective, TranslocoModule } from '@jsverse/transloco';
 @Component({
-  selector: 'app-myclasses',
-  standalone: true,
-  imports: [
-    PaginatorModule,
-    ReactiveFormsModule,
-    TableModule,
-    CommonModule,
-    PanelModule,
-    ButtonModule,
-    DialogModule,
-    InputNumberModule,
-    FloatLabelModule,
-    InputTextModule,
-    TranslocoModule,
-    TranslocoDirective
-  ],
-  templateUrl: './myclasses.component.html',
-  styleUrl: './myclasses.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-myclasses',
+    imports: [
+        PaginatorModule,
+        ReactiveFormsModule,
+        TableModule,
+        CommonModule,
+        PanelModule,
+        ButtonModule,
+        DialogModule,
+        InputNumberModule,
+        FloatLabelModule,
+        InputTextModule,
+        TranslocoModule,
+        TranslocoDirective
+    ],
+    templateUrl: './myclasses.component.html',
+    styleUrl: './myclasses.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MyclassesComponent implements OnInit, OnDestroy {
 
