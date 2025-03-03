@@ -16,10 +16,11 @@ export const reg = RegExp(
 );
 
 @Component({
-    selector: 'app-login',
-    imports: [FloatLabelModule, CommonModule, ReactiveFormsModule],
-    templateUrl: './login.component.html',
-    styleUrl: './login.component.css'
+  selector: 'app-login',
+  imports: [FloatLabelModule, CommonModule, ReactiveFormsModule],
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.css',
+  standalone: true
 })
 export class LoginComponent {
   public isPasswordShow = false;
@@ -27,7 +28,7 @@ export class LoginComponent {
   constructor(
     public registerService: RegisterService,
     private loginService: LoginService
-  ) {}
+  ) { }
 
   public userLogin = new FormGroup({
     userName: new FormControl('', [
@@ -46,9 +47,9 @@ export class LoginComponent {
 
   submitData() {
     this.loginService.login({
-      username :this.userLogin.value.userName,
-      password : this.userLogin.value.password,
-      rememberMe : 'true'===this.userLogin.value.rememberme,
+      username: this.userLogin.value.userName,
+      password: this.userLogin.value.password,
+      rememberMe: 'true' === this.userLogin.value.rememberme,
     });
   }
 }

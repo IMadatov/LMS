@@ -26,7 +26,8 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
         IconFieldModule
     ],
     templateUrl: './transloco.component.html',
-    styleUrls: ['./transloco.component.scss']
+    styleUrl: './transloco.component.css',
+    standalone:true
 })
 export class TranslocoComponent implements AfterViewChecked ,OnInit,OnDestroy{
   @ViewChild('enterClickSaveBtn') saveBtn: ElementRef<HTMLButtonElement> | undefined;

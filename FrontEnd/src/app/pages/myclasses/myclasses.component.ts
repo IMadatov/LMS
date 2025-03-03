@@ -30,7 +30,8 @@ import { TranslocoDirective, TranslocoModule } from '@jsverse/transloco';
     ],
     templateUrl: './myclasses.component.html',
     styleUrl: './myclasses.component.css',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true
 })
 export class MyclassesComponent implements OnInit, OnDestroy {
 
