@@ -1,25 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatToolbarModule } from '@angular/material/toolbar';
+
 import { SideBarComponent } from './side-bar/side-bar.component';
 import { HeaderService } from './header.service';
 import { MenuModule } from 'primeng/menu';
 import { CommonModule } from '@angular/common';
 import { SignalrService } from '../../services/signalr.service';
-import { TranslocoDirective, TranslocoModule } from '@jsverse/transloco';
+import { TranslocoModule } from '@jsverse/transloco';
 import { ThemeService } from '../../services/theme.service';
+import { ToolbarModule } from 'primeng/toolbar';
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
     SideBarComponent,
     MenuModule,
     CommonModule,
-    TranslocoModule
+    TranslocoModule,
+    ToolbarModule
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',

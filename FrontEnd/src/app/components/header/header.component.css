@@ -4,4 +4,11 @@
         margin-bottom: 10px;
         color: white;
     }
+    ::ng-deep .p-toolbar{
+        background-color:  rgb(20, 20, 70);
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        border-radius: 0;
+    }
 }
