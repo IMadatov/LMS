@@ -1,8 +1,8 @@
 <div class=" w-full h-full items-center flex justify-center overflow-scroll py-8  md:py-0 md:overflow-hidden">
-  <div class="w-full md:max-w-2xl md:px-5 shadow overflow-hidden  sm:rounded-lg">
+  <div class="w-full md:max-w-2xl md:px-5 shadow-sm overflow-hidden  sm:rounded-lg">
     <div class="px-4 py-5 sm:px-6 flex justify-between">
       <div>
-        <h3 class="text-lg leading-6 font-medium text-gray-900">
+        <h3 class="text-lg leading-6  text-gray-900 font-bold">
           {{ (profileService.userData?.roles?.at(0) | uppercase) ?? "USER" }}
         </h3>
         <p class="mt-1 max-w-2xl text-sm text-gray-500">
@@ -11,10 +11,10 @@
         </p>
         <p>
           @if (profileService.userData?.active) {
-            <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">{{'activeKey'|transloco}}</span>
+            <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-green-900 dark:text-green-300">{{'activeKey'|transloco}}</span>
           }
           @else {
-            <span class="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">{{'deactiveKey'|transloco}}</span>
+            <span class="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-700 dark:text-gray-300">{{'deactiveKey'|transloco}}</span>
           }
         </p>
       </div>
@@ -38,7 +38,7 @@
         <button type='button'
         (click)="profileService.Reload()"
         style="background-color:  rgb(20, 20, 70);"
-      class='py-2.5 pl-4 group pr-3.5 text-sm  text-white rounded-full cursor-pointer font-semibold text-center shadow-xs transition-all duration-500 flex gap-2 items-center hover:bg-indigo-700'>
+      class='py-2.5 pl-4 group pr-3.5 text-sm  text-white rounded-full cursor-pointer font-semibold text-center shadow-2xs transition-all duration-500 flex gap-2 items-center hover:bg-indigo-700'>
       {{'refreshKey'|transloco}}
       <svg class="transition-all duration-700 "
       

@@ -12,7 +12,7 @@
     </div>
 
     <div class="flex gap-3 items-center">
-      <div><button class="w-8 h-8 flex justify-center items-center border rounded border-gray-400"
+      <div><button class="w-8 h-8 flex justify-center items-center border rounded-sm border-gray-400"
           (click)="themeService.toolbarToggle()"><i class="pi"
             [ngClass]="themeService.getThemeMode()?'pi-moon':'pi-sun'"></i></button></div>
       <div class="hidden md:block">
