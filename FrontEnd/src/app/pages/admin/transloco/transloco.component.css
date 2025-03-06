@@ -1,0 +1,17 @@
+:host {
+  ::ng-deep .p-datatable {
+    display: flex;
+    flex-direction: column;
+    height: 88vh;
+  }
+
+  ::ng-deep .p-datatable .p-datatable-header {
+    flex: 0;
+  } 
+  ::ng-deep .p-datatable .p-datatable-wrapper {
+    flex: 1;
+  } 
+  ::ng-deep .p-datatable p-paginator {
+    flex: 0;
+  } 
+}

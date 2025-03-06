@@ -4,11 +4,10 @@ import { AccordionModule } from 'primeng/accordion';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-tests',
-  standalone: true,
-  imports: [PanelModule,CommonModule,AccordionModule],
-  templateUrl: './tests.component.html',
-  styleUrl: './tests.component.css'
+    selector: 'app-tests',
+    imports: [PanelModule, CommonModule, AccordionModule],
+    templateUrl: './tests.component.html',
+    styleUrl: './tests.component.css'
 })
 export class TestsComponent {
   tabs = [

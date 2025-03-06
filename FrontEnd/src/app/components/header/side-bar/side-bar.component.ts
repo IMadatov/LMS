@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, ViewChild } from '@angular/core';
-import { SidebarModule } from 'primeng/sidebar';
+import { DrawerModule } from 'primeng/drawer';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { AvatarModule } from 'primeng/avatar';
@@ -10,28 +10,28 @@ import { PanelMenuModule } from 'primeng/panelmenu';
 import { MenuItem } from 'primeng/api';
 import { MenuModule } from 'primeng/menu';
 import { Router } from '@angular/router';
-import { CommonModule, JsonPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { BadgeModule } from 'primeng/badge';
 import { NavigationItem } from '../../../models/navigation-item';
 import { AuthService } from '../../../pages/auth/auth.service';
 import { TranslocoModule } from '@jsverse/transloco';
 @Component({
-  selector: 'app-side-bar',
-  standalone: true,
-  imports: [
-    CommonModule,
-    SidebarModule,
-    ButtonModule,
-    RippleModule,
-    AvatarModule,
-    StyleClassModule,
-    PanelMenuModule,
-    MenuModule,
-    BadgeModule,
-    TranslocoModule
-],
-  templateUrl: './side-bar.component.html',
-  styleUrl: './side-bar.component.css',
+    selector: 'app-side-bar',
+    imports: [
+        CommonModule,
+        DrawerModule,
+        ButtonModule,
+        RippleModule,
+        AvatarModule,
+        StyleClassModule,
+        PanelMenuModule,
+        MenuModule,
+        BadgeModule,
+        TranslocoModule
+    ],
+    templateUrl: './side-bar.component.html',
+    styleUrl: './side-bar.component.css',
+    standalone:true
 })
 export class SideBarComponent implements OnInit {
   constructor(
