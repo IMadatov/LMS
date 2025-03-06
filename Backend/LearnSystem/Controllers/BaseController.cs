@@ -1,6 +1,7 @@
 ﻿using BaseCrud.Abstractions.Entities;
 using BaseCrud.Errors;
 using BaseCrud.ServiceResults;
+using General.Models;
 using LearnSystem.Models;
 using Microsoft.AspNetCore.Mvc;
 using Minerals.StringCases;

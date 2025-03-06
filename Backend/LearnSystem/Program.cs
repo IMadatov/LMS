@@ -13,8 +13,7 @@ using BaseCrud.Abstractions;
 using System.Reflection;
 using BaseCrud.PrimeNg;
 using LearnSystem.Extensions.Converters;
-using Infrastructure;
-using Application;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -88,10 +87,6 @@ builder.Services.AddDbContext<ApplicationDbContext>((sp, opt) =>
     .AddInterceptors(sp.GetRequiredService<MySaveChangesInterceptor>());
 });
 
-builder.Services
-    .InfrastructureSettings(builder.Configuration)
-    .AddApplicationServices(builder.Configuration);
-
 
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IAuthService, AuthService>();
@@ -136,7 +131,7 @@ builder.Services.AddBaseCrudService(
 );
 
 
-var app =await builder.Build().MainConfigurationInfrastructureAsync();
+var app =builder.Build();
 
 
 //app.Use(async (context, next) =>
