@@ -33,14 +33,14 @@
   </ItemGroup>
     
   <ItemGroup>
-    <ProjectReference Include="..\BaseCrud\BaseCrud.Abstractions\BaseCrud.Abstractions.csproj" />
-    <ProjectReference Include="..\BaseCrud\BaseCrud.EntityFrameworkCore\BaseCrud.EntityFrameworkCore.csproj" />
-    <ProjectReference Include="..\BaseCrud\BaseCrud.PrimeNg\BaseCrud.PrimeNg.csproj" />
-    <ProjectReference Include="..\BaseCrud\BaseCrud\BaseCrud.csproj" />
-    <ProjectReference Include="..\Translation\Application\Application.csproj" />
-	<ProjectReference Include="..\Translation\Domain\Domain.csproj" />
-	<ProjectReference Include="..\Translation\GTranslate\GTranslate.csproj" />
-	<ProjectReference Include="..\Translation\Infrastructure\Infrastructure.csproj" />
+    <ProjectReference Include="..\Services\Translation\Application\Application.csproj" />
+    <ProjectReference Include="..\Services\Translation\Domain\Domain.csproj" />
+    <ProjectReference Include="..\Services\Translation\GTranslate\GTranslate.csproj" />
+    <ProjectReference Include="..\Services\Translation\Infrastructure\Infrastructure.csproj" />
+    <ProjectReference Include="..\Utils\BaseCrud\BaseCrud.Abstractions\BaseCrud.Abstractions.csproj" />
+    <ProjectReference Include="..\Utils\BaseCrud\BaseCrud.EntityFrameworkCore\BaseCrud.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\Utils\BaseCrud\BaseCrud.PrimeNg\BaseCrud.PrimeNg.csproj" />
+    <ProjectReference Include="..\Utils\BaseCrud\BaseCrud\BaseCrud.csproj" />
   </ItemGroup>
     
   <ItemGroup>

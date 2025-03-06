@@ -24,7 +24,7 @@ namespace LearnSystem.Controllers
        
 
         [HttpPost]
-        public async Task<ActionResult<QueryResult<SubjectDto>?>>GetSubjects(PrimeTableMetaData primeTableMetaData) =>
+        public async Task<ActionResult<QueryResult<SubjectDto>?>> GetSubjects(PrimeTableMetaData primeTableMetaData) =>
             await FromServiceResult(subjectBaseCrudService.GetAllAsync(primeTableMetaData,UserProfile));
 
         [HttpPost]
