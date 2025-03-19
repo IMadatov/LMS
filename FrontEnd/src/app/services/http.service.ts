@@ -22,12 +22,13 @@ export class HttpService {
 
 
 
-  urlGlobal = 'https://m4d28hvg-7101.euw.devtunnels.ms/';
+  
+  urlGlobal = 'https://8hgnk3gt-7101.inc1.devtunnels.ms/';
   urlLocal = 'https://localhost:7101/';
   urlBase = '';
   isAuthenticated$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-  url = this.urlLocal + this.urlBase;
+  url = this.urlGlobal + this.urlBase;
 
   constructor(private http: HttpClient, private router: Router) { }
 

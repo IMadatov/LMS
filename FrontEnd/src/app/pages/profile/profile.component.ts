@@ -5,13 +5,16 @@ import { CascadeSelectModule } from 'primeng/cascadeselect';
 import { FormsModule } from '@angular/forms';
 import { TranslationService } from '../../services/translation.service';
 import { TranslocoModule } from '@jsverse/transloco';
+import { SelectModule } from 'primeng/select';
+
 @Component({
     selector: 'app-profile',
     imports: [
         CommonModule,
         CascadeSelectModule,
         FormsModule,
-        TranslocoModule
+        TranslocoModule,
+        SelectModule
     ],
     templateUrl: './profile.component.html',
     styleUrl: './profile.component.css',
@@ -29,16 +32,12 @@ export class ProfileComponent implements OnInit{
     public translationService:TranslationService
   ) {
     
-  }
-  public countries: any[] | undefined;
-
-  public selectedLanguage: any;
-
+  } 
   ngOnInit(): void {
     this.profileService.getUserData();
   }
 
   LanguageChange(){
-    this.translationService.ChangeLanguageUser();
+    this.translationService.ChangeLanguageUser();    
   }
 }

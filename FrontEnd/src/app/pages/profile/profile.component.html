@@ -115,7 +115,19 @@
           <dt class="text-sm font-medium text-gray-500">{{'language.Key'|transloco}}</dt>
           <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
             <div class="card flex justify-content-center">
-              <p-cascadeSelect 
+              <div class="flex justify-center z-[1000]">
+                <p-select appendTo="body" styleClass="custom-dropdown-panel"  [options]="translationService.countries" [(ngModel)]="translationService.currentLanguage" optionLabel="name" (onChange)="LanguageChange()" class="w-full md:w-56" >
+                  <ng-template pTemplate="option" let-option>
+                    <div class="flex items-center w-10 h-8 gap-2 ">
+                        <img 
+                            src="/flags/{{option.code}}.png"
+                            />
+                        <span>{{ option.name }}</span>
+                    </div>
+                </ng-template>
+                </p-select>
+            </div>
+              <!-- <p-cascadeSelect 
                 [(ngModel)]="translationService.currentLanguage" 
                   [options]="translationService.countries"
                   optionLabel="name" 
@@ -127,13 +139,13 @@
 
                       <ng-template pTemplate="option" let-option>
                           <div class="flex items-center  gap-2 ">
-                              <!-- <img 
+                              <img 
                                   src="./../../../assets/flags/kr.png"
-                                  /> -->
+                                  />
                               <span>{{ option.name }}</span>
                           </div>
                       </ng-template>
-              </p-cascadeSelect>
+              </p-cascadeSelect> -->
           </div>
           </dd>
         </div>

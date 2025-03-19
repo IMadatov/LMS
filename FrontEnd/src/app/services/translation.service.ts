@@ -15,7 +15,6 @@ export class TranslationService {
   }
 
 
-  private subscribtion: Subscription = Subscription.EMPTY;
   
   public currentLanguage: Country | undefined;
 
@@ -77,7 +76,6 @@ export class TranslationService {
   ChangeLanguageUser(){
     this.httpService.ChangeLanguage(this.currentLanguage?.code||'en').subscribe((value)=>{
       this.translocoService.setActiveLang(value.language);
-      
     });
   }
 
