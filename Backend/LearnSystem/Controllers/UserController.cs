@@ -1,5 +1,6 @@
 ﻿using BaseCrud.Abstractions.Entities;
 using BaseCrud.PrimeNg;
+using General.DTOs;
 using LearnSystem.DbContext;
 using LearnSystem.Models;
 using LearnSystem.Models.ModelsDTO;

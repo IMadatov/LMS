@@ -1,0 +1,13 @@
+services:
+  auth.api:
+    image: ${DOCKER_REGISTRY-}authapi
+    build:
+      context: .
+      dockerfile: Services/Auth/Auth.API/Dockerfile
+
+  telegrambot.api:
+    image: ${DOCKER_REGISTRY-}telegrambotapi
+    build:
+      context: .
+      dockerfile: Services/Telegram/TelegramBot/TelegramBot.API/Dockerfile
+

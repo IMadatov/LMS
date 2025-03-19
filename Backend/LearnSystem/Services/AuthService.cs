@@ -1,4 +1,5 @@
-﻿using LearnSystem.DbContext;
+﻿using General.Enums;
+using LearnSystem.DbContext;
 using LearnSystem.Models;
 using LearnSystem.Models.ModelsDTO;
 using LearnSystem.Services.IServices;
@@ -56,10 +57,18 @@ public class AuthService(
 
     public async Task<ServiceResultBase<bool>> SignInAsync(SignInDto signInDto)
     {
+
+
         var result = await signInManager.PasswordSignInAsync(signInDto.Username, signInDto.Password, signInDto.RememberMe, lockoutOnFailure: true);
+        
+        
 
         if (result.Succeeded)
         {
+
+            var user = await userManager.FindByNameAsync(signInDto.Username);
+            var roles = await userManager.GetRolesAsync(user);
+            await userManager.AddClaimAsync(user, new Claim(ClaimTypes.Country,user.Language.ToString()));
 
             return new OkServiceResult<bool>(true);
         }
@@ -148,7 +157,7 @@ public class AuthService(
             PhotoUrl = userTelegram.photo_url,
             StatusUser = status,
             CreatedDate = DateTime.Now,
-            Language = Domain.Models.Languages.ENGLISH
+            Language = Languages.ENGLISH
         };
 
 

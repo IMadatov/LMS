@@ -1,4 +1,4 @@
-﻿namespace Test.Application
+﻿namespace TelegramBot.Domain
 {
     public class Class1
     {

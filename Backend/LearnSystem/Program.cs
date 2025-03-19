@@ -124,7 +124,7 @@ builder.Services.AddCors(opt =>
             .WithOrigins("https://cgtlb6bz-4200.euw.devtunnels.ms").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
     opt.AddPolicy("ToLocal",
        buil => buil
-           .WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+           .WithOrigins("   ").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
 
 });
 

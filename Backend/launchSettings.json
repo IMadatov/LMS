@@ -4,7 +4,9 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "learnsystem": "StartDebugging"
+        "learnsystem": "StartDebugging",
+        "auth.api": "StartDebugging",
+        "telegrambot.api": "StartDebugging"
       }
     }
   }

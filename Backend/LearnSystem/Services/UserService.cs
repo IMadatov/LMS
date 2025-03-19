@@ -2,6 +2,7 @@
 using BaseCrud.Abstractions.Entities;
 using BaseCrud.EntityFrameworkCore;
 using Domain.Models;
+using General.Enums;
 using LearnSystem.DbContext;
 using LearnSystem.Models;
 using LearnSystem.Models.ModelsDTO;
@@ -15,10 +16,8 @@ namespace LearnSystem.Services;
 
 public class UserService(
     ApplicationDbContext _context,
-    IHttpContextAccessor _httpContextAccessor,
     UserManager<User> userManager,
-    IMapper autoMapper,
-    RoleManager<ApplicationRole> roleManager
+    IMapper autoMapper
 ) : IUserService
 {
     public async Task<ServiceResultBase<UserDto>> Me(Guid userId)

@@ -1,0 +1,5 @@
+@TelegramBot.API_HostAddress = http://localhost:5111
+GET {{TelegramBot.API_HostAddress}}/swagger/
+Accept: application/json
+
+###

@@ -1,4 +1,4 @@
-﻿namespace Domain.Models;
+﻿namespace General.Enums;
 public enum Languages
 {
     ENGLISH,

@@ -1,0 +1,13 @@
+services:
+  auth.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "5290:8080"
+
+  telegrambot.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "5111:8080"
+

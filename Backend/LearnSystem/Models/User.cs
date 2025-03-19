@@ -1,5 +1,5 @@
 ﻿using BaseCrud.Entities;
-using Domain.Models;
+using General.Enums;
 using Microsoft.AspNetCore.Identity;
 
 namespace LearnSystem.Models;

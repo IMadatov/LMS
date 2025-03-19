@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using BaseCrud.Entities;
-using Domain.Models;
+using General.Enums;
 
 namespace LearnSystem.Models.ModelsDTO
 {

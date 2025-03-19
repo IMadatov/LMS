@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>ac475176-f8ec-4d31-9e9d-2f23b276cf32</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerfileContext>..\..\..\..</DockerfileContext>
+		<DockerComposeProjectPath>..\..\..\..\docker-compose.dcproj</DockerComposeProjectPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+		<PackageReference Include="Minerals.StringCases" Version="0.2.1" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="NSwag.AspNetCore" Version="14.2.0" />
+		<PackageReference Include="NSwag.Generation" Version="14.2.0" />
+		<PackageReference Include="NSwag.Generation.AspNetCore" Version="14.2.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\..\Utils\General\General.csproj" />
+		<ProjectReference Include="..\..\..\..\Utils\Web.API\Web.API.csproj" />
+		<ProjectReference Include="..\TelegramBot.Application\TelegramBot.Application.csproj" />
+		<ProjectReference Include="..\TelegramBot.Domain\TelegramBot.Domain.csproj" />
+		<ProjectReference Include="..\TelegramBot.Infrastructure\TelegramBot.Infrastructure.csproj" />
+	</ItemGroup>
+
+
+	<Target Name="NSwag" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Debug'">
+		<Exec WorkingDirectory="$(ProjectDir)" EnvironmentVariables="ASPNETCORE_ENVIRONMENT=Development" Command="dotnet %userprofile%/.nuget\packages\nswag.msbuild\14.2.0\tools\Net80/dotnet-nswag.dll run nswag.microservice.json /variables:Configuration=$(Configuration)" />
+	</Target>
+	
+</Project>

@@ -7,19 +7,18 @@ using GTranslate.Services.IServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Application
+namespace  Application;
+
+public static class ApplicationServiceRegistration
 {
-    public static class ApplicationServiceRegistration
+    public static IServiceCollection AddApplicationServices(this IServiceCollection services,IConfiguration configuration)
     {
-        public static IServiceCollection AddApplicationServices(this IServiceCollection services,IConfiguration configuration)
+        services.AddAutoMapper(opt =>
         {
-            services.AddAutoMapper(opt =>
-            {
-                opt.CreateMap<Transloco,TranslocoDto>().ReverseMap(); 
-            });
-            services.AddScoped<ITranslocoService, TranslocoService>();
-            services.AddScoped<IGTranslateService, GTranslateService>(); 
-            return services;
-        }
+            opt.CreateMap<Transloco,TranslocoDto>().ReverseMap(); 
+        });
+        services.AddScoped<ITranslocoService, TranslocoService>();
+        services.AddScoped<IGTranslateService, GTranslateService>(); 
+        return services;
     }
 }

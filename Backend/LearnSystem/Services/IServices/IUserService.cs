@@ -1,6 +1,5 @@
 ﻿using BaseCrud.Abstractions.Entities;
-using LearnSystem.Models;
-using LearnSystem.Models.ModelsDTO;
+using General.DTOs;
 using ServiceStatusResult;
 
 

@@ -1,6 +1,8 @@
 ﻿using BaseCrud.Abstractions.Entities;
 using BaseCrud.Errors;
 using BaseCrud.ServiceResults;
+using General.Helper;
+using General.Models;
 using LearnSystem.Models;
 using Microsoft.AspNetCore.Mvc;
 using Minerals.StringCases;
@@ -72,22 +74,6 @@ namespace LearnSystem.Controllers
         /// <summary>
         /// The User definition of current scope
         /// </summary>
-        protected IUserProfile<Guid>? UserProfile
-        {
-            get
-            {
-                string? identifier = User.FindFirstValue(ClaimTypes.Name);
-                var userId=User.FindFirstValue(ClaimTypes.NameIdentifier);
-                
-                if (identifier == null)
-                    return null;
-
-                return new UserProfile
-                {
-                    Fullname = identifier,
-                    Id = Guid.Parse(userId),
-                };
-            }
-        }
+        protected IUserProfile<Guid>? UserProfile => HelperUserProfile.GetUserProfile(User);
     }
 }

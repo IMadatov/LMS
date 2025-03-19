@@ -33,7 +33,7 @@
   </ItemGroup>
     
   <ItemGroup>
-    <ProjectReference Include="..\Services\Translation\Application\Application.csproj" />
+    <ProjectReference Include="..\Services\Translation\Application\Translation.Application.csproj" />
     <ProjectReference Include="..\Services\Translation\Domain\Domain.csproj" />
     <ProjectReference Include="..\Services\Translation\GTranslate\GTranslate.csproj" />
     <ProjectReference Include="..\Services\Translation\Infrastructure\Infrastructure.csproj" />
@@ -41,6 +41,7 @@
     <ProjectReference Include="..\Utils\BaseCrud\BaseCrud.EntityFrameworkCore\BaseCrud.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\Utils\BaseCrud\BaseCrud.PrimeNg\BaseCrud.PrimeNg.csproj" />
     <ProjectReference Include="..\Utils\BaseCrud\BaseCrud\BaseCrud.csproj" />
+    <ProjectReference Include="..\Utils\General\General.csproj" />
   </ItemGroup>
     
   <ItemGroup>
