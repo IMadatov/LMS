@@ -18,25 +18,29 @@ public static class InfrastructureServiceRegistration
                 configuration.GetConnectionString("AuthConnection"),
                 builder =>
                 {
-                    //builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(5), null);
+                    builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(5), null);
                 }));
 
-        services.AddIdentityCore<ApplicationUser>(options =>
-        {
-            //user
-            options.User.RequireUniqueEmail = false;
-            options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
-            // Lockout
-            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
-            options.Lockout.MaxFailedAccessAttempts = 10000;
-            options.Lockout.AllowedForNewUsers = true;
-
-        })
-            .AddRoles<ApplicationRole>()
+        services.AddIdentity<ApplicationUser, ApplicationRole>()
             .AddEntityFrameworkStores<AuthContext>()
-            .AddClaimsPrincipalFactory<CustomUserClaimsPrincipalFactory>()
-            .AddApiEndpoints() ;
+            .AddDefaultTokenProviders();
+
+        //services.AddIdentityCore<ApplicationUser>(options =>
+        //{
+        //    //user
+        //    options.User.RequireUniqueEmail = false;
+        //    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+        //    // Lockout
+        //    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
+        //    options.Lockout.MaxFailedAccessAttempts = 10000;
+        //    options.Lockout.AllowedForNewUsers = true;
+
+        //})
+        //    .AddRoles<ApplicationRole>()
+        //    .AddEntityFrameworkStores<AuthContext>()
+        //    .AddClaimsPrincipalFactory<CustomUserClaimsPrincipalFactory>()
+        //    .AddApiEndpoints() ;
 
         //services.AddIdentity<ApplicationUser, ApplicationRole>(option =>
         //{

@@ -2,14 +2,15 @@
 using Auth.Domain.Entities;
 using Auth.Infrastructure.Context;
 using BaseCrud.Errors;
-using BaseCrud.Errors.Keys;
 using BaseCrud.ServiceResults;
 using General.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -22,7 +23,6 @@ public class AuthService(
     IHttpContextAccessor httpContextAccessor,
     SignInManager<ApplicationUser> signInManager,
     IConfiguration configuration,
-    //ITelegramService telegramService,
     RoleManager<ApplicationRole> roleManager
     ) : IAuthService
 {
@@ -64,59 +64,138 @@ public class AuthService(
         return ServiceResult.Ok(true);
     }
 
-    public async Task<ServiceResult<bool>> SignInAsync(SignInDto signInDto)
+    public async Task<ServiceResult<JWTTokenModel>> SignInAsync(SignInDto signInDto)
     {
-
-
-        try
-        {
             var result = await signInManager.PasswordSignInAsync(signInDto.Username, signInDto.Password, signInDto.RememberMe, lockoutOnFailure: true);
-
-
 
             if (result.Succeeded)
             {
-
                 var user = await userManager.FindByNameAsync(signInDto.Username);
-                var roles = await userManager.GetRolesAsync(user);
-                await userManager.AddClaimAsync(user, new Claim(ClaimTypes.Country, user.Language.ToString()));
 
-                return ServiceResult.Ok(true);
+            var authClaim = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
+                    new Claim(ClaimTypes.IsPersistent,signInDto.RememberMe?"1":"0"),
+                    new Claim(ClaimTypes.Role,user.MainRole??"user")
+                };
+
+                var roles = await userManager.GetRolesAsync(user);
+
+                
+                foreach (var role in roles)
+                {
+                    authClaim.Add(new Claim("roles", role));
+                }
+
+                authClaim.Add(new Claim(ClaimTypes.Country, user.Language.ToString()));
+                //await userManager.AddClaimAsync(user, new Claim(ClaimTypes.Country, user.Language.ToString()));
+
+
+                var token =GenerateAccessToken(authClaim); 
+                var refreshToken =await GenerateRefreshTokenAsync(authClaim);
+
+                
+                return ServiceResult.Ok(new JWTTokenModel
+                {
+                    AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
+                    RefreshToken = refreshToken
+                });
             }
 
-            return ServiceResult.Ok(false);
-        }
-        catch (Exception e)
-        {
-
-            return ServiceResult.BadRequest(new ServiceError("21", ErrorKeys.Database.EntityDeactivated));
-        }
+            return ServiceResult.Unauthorized();
     }
 
-
-
-    public async Task<ServiceResult<string>> OnSite()
+    private async Task<string>GenerateRefreshTokenAsync(List<Claim> claims)
     {
-        var userId = httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+        var randomNumber = new byte[64];
+        
+        using var rng = RandomNumberGenerator.Create();
+       
+        rng.GetBytes(randomNumber);
+
+        var refreshToken = Convert.ToBase64String(randomNumber);
+
+        var user = await userManager.FindByIdAsync(claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
+
+        var isPersistent = claims.FirstOrDefault(x => x.Type == ClaimTypes.IsPersistent)?.Value;
+        
+        user.RefreshToken = refreshToken;
+
+        user.RefreshTokenExpiryTime = isPersistent=="1"? DateTime.Now.AddDays(5):DateTime.Now.AddHours(4);
+        
+        var result = await userManager.UpdateAsync(user);
+
+        return refreshToken;
+    }
+    JwtSecurityToken GenerateAccessToken(List<Claim> claims)
+    {
+        var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:SecretKey"]));
+
+        var token = new JwtSecurityToken(
+            issuer: configuration["JwtSettings:Issuer"],
+            audience: configuration["JwtSettings:Audience"],
+            expires: DateTime.Now.AddHours(2),
+            claims: claims,
+            signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+        );
+
+        return token;
+    }
+
+    public async Task<ServiceResult<JWTTokenModel>> RefreshToken(JWTTokenModel model)
+    {
+        if(model is null)
+            return ServiceResult.BadRequest(new ServiceError("Refresh token is null", "refresh_token"));
+
+        var principal = GetPrincipalFromExpiredToken(model.AccessToken);
+
+        if(principal.Identity.Name is null)
+            return ServiceResult.BadRequest(new ServiceError("Invalid access token or refresh token", "refresh_token"));
+
+        var user =await userManager.FindByNameAsync(principal.Identity.Name);
+
+        if(user is null ||user.RefreshToken!=model.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+            return ServiceResult.BadRequest(new ServiceError("Invalid access token or refresh token", "refresh_token"));
+
+        var newAccessToken = GenerateAccessToken(principal.Claims.ToList());
+        var newRefreshToken =await GenerateRefreshTokenAsync(principal.Claims.ToList());
 
 
-
-        if (userId == null)
+        return ServiceResult.Ok(new JWTTokenModel
         {
-            return ServiceResult.Ok("false");
-        }
+            AccessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
+            RefreshToken = newRefreshToken
+        });
+    }
 
-        var user = await userManager.FindByIdAsync(userId);
-
-        if (user == null)
+    ClaimsPrincipal? GetPrincipalFromExpiredToken(string token)
+    {
+        var tokentValidationParameters = new TokenValidationParameters
         {
-            return ServiceResult.Ok("false");
-        }
+            ValidateAudience = false,
+            ValidateIssuer = false,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:SecretKey"])),
+            ValidateLifetime = false
+        };
 
+        var tokenHandler = new JwtSecurityTokenHandler();
 
-        var role = await userManager.GetRolesAsync(user);
+        var principal =tokenHandler.ValidateToken(token,tokentValidationParameters, out var securityToken);
 
-        return ServiceResult.Ok(role.FirstOrDefault().ToString());
+        if(securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            throw new SecurityTokenException("Invalid token");
+        return principal;
+    }
+
+   
+
+    public async Task<ServiceResult<string?>> OnSite()
+    {
+        var currentRole= httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value;
+        return ServiceResult.Ok(currentRole);
     }
 
 

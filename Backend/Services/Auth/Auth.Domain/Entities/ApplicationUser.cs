@@ -36,4 +36,7 @@ public class ApplicationUser:IdentityUser<Guid>,IEntity<Guid>
     public DateTime? LastModifiedDate { get; set; }
 
     public Languages Language { get; set; }
+    public string? RefreshToken { get; set; }
+    public DateTime RefreshTokenExpiryTime { get; set; }
+    public string? MainRole { get; set; }
 }

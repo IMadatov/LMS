@@ -20,6 +20,7 @@ public class AuthController(
 {
 
     [HttpPost]
+    [Authorize(Roles = "admin")]
     public async Task<ActionResult<bool>> SignUp(SignUpDto signUp) =>
         await FromServiceResult(authService.SignUpAsync(signUp));
 
@@ -28,13 +29,17 @@ public class AuthController(
         await FromServiceResult(authService.SignOutAsync());
 
     [HttpPost]
-    public async Task<ActionResult<bool>> SignInAsync(SignInDto signInDto)
+    public async Task<ActionResult<JWTTokenModel>> SignInAsync(SignInDto signInDto)
         => await FromServiceResult(authService.SignInAsync(signInDto));
 
-  
+    [HttpPost]
+    public async Task<ActionResult<JWTTokenModel>> RefreshToken(JWTTokenModel model)
+        => await FromServiceResult(authService.RefreshToken(model));
+
     [HttpGet]
-    public async Task<ActionResult<string>> OnSite()
+    public async Task<ActionResult<string?>> OnSite()
         => await FromServiceResult(authService.OnSite());
+
 
     [HttpPost]
     public async Task<ActionResult<bool>> SignUpWithTelegram(UserTeleramDTO userTelegram, string telegramData)
@@ -62,6 +67,8 @@ public class AuthController(
         try
         {
             var user = await telegramBotClient.GetUserInfoAsync(id);
+
+            
 
             return Ok(user);
         }

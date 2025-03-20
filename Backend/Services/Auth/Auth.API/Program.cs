@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+
 builder.Services
     .InfrastructureServices(builder.Configuration)
     .AddApplicationService(builder.Configuration)
@@ -19,6 +20,7 @@ var app = await builder.Build()
 // Configure the HTTP request pipeline.
 
 app.UseHttpsRedirection();
+
 
 
 app.Run();

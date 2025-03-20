@@ -18,6 +18,12 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
     <PackageReference Include="Minerals.StringCases" Version="0.2.1" />
+    <PackageReference Include="NSwag.AspNetCore" Version="14.2.0" />
+    <PackageReference Include="NSwag.Generation.AspNetCore" Version="14.2.0" />
+    <PackageReference Include="NSwag.MSBuild" Version="14.2.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -29,4 +35,7 @@
     <ProjectReference Include="..\Auth.Infrastructure\Auth.Infrastructure.csproj" />
   </ItemGroup>
 
+	<Target Name="NSwag" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Debug'">
+		<Exec WorkingDirectory="$(ProjectDir)" EnvironmentVariables="ASPNETCORE_ENVIRONMENT=Development" Command="dotnet %userprofile%/.nuget\packages\nswag.msbuild\14.2.0\tools\Net80/dotnet-nswag.dll run nswag.front.json /variables:Configuration=$(Configuration)" />
+	</Target>
 </Project>

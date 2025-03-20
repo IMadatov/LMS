@@ -1,0 +1,401 @@
+{
+  "x-generator": "NSwag v14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))",
+  "openapi": "3.0.0",
+  "info": {
+    "title": "My Title",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/Auth/SignUp": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Auth_SignUp",
+        "requestBody": {
+          "x-name": "signUp",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignUpDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Auth/SignOut": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Auth_SignOut",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Auth/SignIn": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Auth_SignIn",
+        "requestBody": {
+          "x-name": "signInDto",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignInDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JWTTokenModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Auth/RefreshToken": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Auth_RefreshToken",
+        "requestBody": {
+          "x-name": "model",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JWTTokenModel"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JWTTokenModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Auth/OnSite": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Auth_OnSite",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Auth/SignUpWithTelegram": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Auth_SignUpWithTelegram",
+        "parameters": [
+          {
+            "name": "telegramData",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "userTelegram",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserTeleramDTO"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Auth/CheckUser": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Auth_CheckUser",
+        "parameters": [
+          {
+            "name": "userTelegramData",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Auth/CheckUsername": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Auth_CheckUsername",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Auth/CheckTelegramData": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Auth_CheckTelegramData",
+        "parameters": [
+          {
+            "name": "telegramData",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Auth/GetUserAsTelegramBot": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Auth_GetUserAsTelegramBot",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Auth/Init": {
+      "put": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Auth_Init",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SignUpDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "userName": {
+            "type": "string"
+          },
+          "rememberme": {
+            "type": "string"
+          }
+        }
+      },
+      "JWTTokenModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "accessToken": {
+            "type": "string"
+          },
+          "refreshToken": {
+            "type": "string"
+          }
+        }
+      },
+      "SignInDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "rememberMe": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UserTeleramDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "userName": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
