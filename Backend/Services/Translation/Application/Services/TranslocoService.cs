@@ -96,5 +96,14 @@ public class TranslocoService(
         return CurrentLanguage;
     }
 
-  
+    public async Task<ServiceResult<bool>> InsertAutoTranslation(List<TranslocoDto> translocoDtos)
+    {
+        var translocos=Mapper.Map<List<Transloco>>(translocoDtos);
+
+        DbContext.AddRange(translocos);
+
+        await DbContext.SaveChangesAsync();
+
+        return ServiceResult.Ok(true);
+    }
 }

@@ -27,6 +27,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Utils\BaseCrud\BaseCrud.Abstractions\BaseCrud.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Utils\BaseCrud\BaseCrud.EntityFrameworkCore\BaseCrud.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\..\..\Utils\BaseCrud\BaseCrud.PrimeNg\BaseCrud.PrimeNg.csproj" />
+    <ProjectReference Include="..\..\..\Utils\BaseCrud\BaseCrud\BaseCrud.csproj" />
     <ProjectReference Include="..\..\..\Utils\Clients\Clients.csproj" />
     <ProjectReference Include="..\..\..\Utils\General\General.csproj" />
     <ProjectReference Include="..\..\..\Utils\Web.API\Web.API.csproj" />

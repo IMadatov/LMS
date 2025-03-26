@@ -6,13 +6,11 @@ public static class GlobalConstants
         => new[]
         {
             //Front Local
+            "http://localhost:4200",
 
-           //Tunnel 
-           "https://319g4q43-4200.euw.devtunnels.ms",
-           
-           "http://localhost:4200",
-           "https://localhost:5502",
-           "https://localhost:5302"
+           //Microservices
+           "http://localhost:61273",//auth.api
+           "http://localhost:61271",//gw
 
         };
 }

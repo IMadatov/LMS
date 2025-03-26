@@ -12,11 +12,5 @@ builder.Services.InfrastructureService(builder.Configuration)
 
 var app = builder.Build().MainConfigure();
 
-
-// Configure the HTTP request pipeline.
-
-app.UseHttpsRedirection();
-
-
 app.Run();
 

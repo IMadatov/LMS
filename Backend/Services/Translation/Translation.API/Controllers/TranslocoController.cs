@@ -25,7 +25,9 @@ public class TranslocoController(ITranslocoService translocoService,IGTranslateS
             translocoDto.Id==0
             ?translocoService.InsertAsync(translocoDto,UserProfile):translocoService.UpdateAsync(translocoDto,UserProfile));
 
-   
+    [HttpPost]
+    public async Task<ActionResult<bool>> InsertAuto(List<TranslocoDto> translocoDtos) =>
+        await FromServiceResult(translocoService.InsertAutoTranslation(translocoDtos));
 
     [HttpPost]
     [AllowAnonymous]

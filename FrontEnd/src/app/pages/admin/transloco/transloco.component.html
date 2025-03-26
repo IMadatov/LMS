@@ -9,6 +9,7 @@
         [customSort]="true" [sortField]="translocoTableService.sortField" [globalFilterFields]="['name']" #dt2>
         <ng-template pTemplate="caption">
             <div class="flex">
+                <p-button label="Refresh" (onClick)="translocoCustomMissingHandler.RefreshKeys()" />
                 
                 <p-iconField iconPosition="left" class="ml-auto">
                     <p-inputIcon>

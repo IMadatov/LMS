@@ -6,7 +6,10 @@
       "serviceActions": {
         "learnsystem": "StartDebugging",
         "auth.api": "StartDebugging",
-        "telegrambot.api": "StartDebugging"
+        "telegrambot.api": "StartDebugging",
+        "gw": "StartDebugging",
+        "test.api": "StartDebugging",
+        "translation.api": "StartDebugging"
       }
     }
   }

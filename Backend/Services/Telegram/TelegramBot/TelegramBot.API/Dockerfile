@@ -5,7 +5,6 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
-EXPOSE 8081
 
 
 # This stage is used to build the service project
@@ -18,11 +17,8 @@ COPY ["Services/Translation/Domain/Domain.csproj", "Services/Translation/Domain/
 COPY ["Utils/BaseCrud/BaseCrud.Abstractions/BaseCrud.Abstractions.csproj", "Utils/BaseCrud/BaseCrud.Abstractions/"]
 COPY ["Utils/BaseCrud/BaseCrud/BaseCrud.csproj", "Utils/BaseCrud/BaseCrud/"]
 COPY ["Utils/Web.API/Web.API.csproj", "Utils/Web.API/"]
-COPY ["Services/Translation/Application/Translation.Application.csproj", "Services/Translation/Application/"]
-COPY ["Utils/BaseCrud/BaseCrud.EntityFrameworkCore/BaseCrud.EntityFrameworkCore.csproj", "Utils/BaseCrud/BaseCrud.EntityFrameworkCore/"]
-COPY ["Services/Translation/GTranslate/GTranslate.csproj", "Services/Translation/GTranslate/"]
-COPY ["Services/Translation/Infrastructure/Infrastructure.csproj", "Services/Translation/Infrastructure/"]
 COPY ["Utils/BaseCrud/BaseCrud.PrimeNg/BaseCrud.PrimeNg.csproj", "Utils/BaseCrud/BaseCrud.PrimeNg/"]
+COPY ["Utils/Clients/Clients.csproj", "Utils/Clients/"]
 COPY ["Services/Telegram/TelegramBot/TelegramBot.Application/TelegramBot.Application.csproj", "Services/Telegram/TelegramBot/TelegramBot.Application/"]
 COPY ["Services/Telegram/TelegramBot/TelegramBot.Domain/TelegramBot.Domain.csproj", "Services/Telegram/TelegramBot/TelegramBot.Domain/"]
 COPY ["Services/Telegram/TelegramBot/TelegramBot.Infrastructure/TelegramBot.Infrastructure.csproj", "Services/Telegram/TelegramBot/TelegramBot.Infrastructure/"]

@@ -1,4 +1,6 @@
 ﻿using Auth.Application.Services;
+using Auth.Application.SignalR;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,8 +10,14 @@ public static class ApplicationServicesRegistration
 {
     public static IServiceCollection AddApplicationService(this  IServiceCollection services,IConfiguration configuration)
     {
-        services.AddScoped<IAuthService,AuthService>();
-        services.AddScoped<IUserService, UserService>();
+        services.AddSignalR();
+        services.AddScoped<IAuthService, AuthService>();    
         return services;
+    }
+
+    public static  WebApplication AuthApplicationConfig(this WebApplication app)
+    {
+        app.MapHub<AuthHub>("/api/auth/signalR");
+        return app;
     }
 }

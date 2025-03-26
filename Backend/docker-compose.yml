@@ -5,9 +5,16 @@ services:
       context: .
       dockerfile: Services/Auth/Auth.API/Dockerfile
 
-  telegrambot.api:
-    image: ${DOCKER_REGISTRY-}telegrambotapi
+  gw:
+    image: ${DOCKER_REGISTRY-}gw
     build:
       context: .
-      dockerfile: Services/Telegram/TelegramBot/TelegramBot.API/Dockerfile
+      dockerfile: Services/GWAPI/GW/Dockerfile
+
+
+  translation.api:
+    image: ${DOCKER_REGISTRY-}translationapi
+    build:
+      context: .
+      dockerfile: Services/Translation/Translation.API/Dockerfile
 

@@ -1,5 +1,4 @@
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
-import { HttpService } from '../../services/http.service';
 import { User } from '../../models/user';
 import { ToastrService } from 'ngx-toastr';
 import { SelectorButtonModule } from '../../models/selector-button-module';
@@ -8,7 +7,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 
-@Injectable()
+@Injectable(
+  {
+    providedIn: 'root'
+  }
+)
 export class UserService {
 
   public isAdmin:boolean=false;
@@ -34,7 +37,6 @@ export class UserService {
   _unsubscribe: Subject<void> = new Subject();
 
   constructor(
-    private httpService: HttpService,
     private authService:AuthService,
     private toastr: ToastrService,
     private route: ActivatedRoute,
@@ -67,45 +69,45 @@ export class UserService {
   }
 
   getUsers() {
-    this.httpService.GetAllUsers({first:this.first,rows:this.rows}).subscribe({
-      next: (resp) => {
-        this.paginationList = resp;
-        this.users = this.paginationList.items;
-        this.incrementCount();
-      },
-    });
+    // this.httpService.GetAllUsers({first:this.first,rows:this.rows}).subscribe({
+    //   next: (resp) => {
+    //     this.paginationList = resp;
+    //     this.users = this.paginationList.items;
+    //     this.incrementCount();
+    //   },
+    // });
   }
 
   getTeachers() {
-    this.httpService.GetTeachers({rows:this.rows,first:this.first}).subscribe({
-      next: (resp) => {
-        this.paginationList = resp;
+    // this.httpService.GetTeachers({rows:this.rows,first:this.first}).subscribe({
+    //   next: (resp) => {
+    //     this.paginationList = resp;
 
-        this.users = this.paginationList.items;
-        this.incrementCount();
-      },
-      error: (err) => console.error(err),
-    });
+    //     this.users = this.paginationList.items;
+    //     this.incrementCount();
+    //   },
+    //   error: (err) => console.error(err),
+    // });
   }
   getStudents() {
-    this.httpService.GetStudents({first:this.first,rows:this.rows,sortField:'id',sortOrder:1}).subscribe({
-      next: (resp) => {
-        this.paginationList = resp;
-        this.users = this.paginationList.items;
-        this.incrementCount();
-      },
-      error: (err) => console.error(err),
-    });
+    // this.httpService.GetStudents({first:this.first,rows:this.rows,sortField:'id',sortOrder:1}).subscribe({
+    //   next: (resp) => {
+    //     this.paginationList = resp;
+    //     this.users = this.paginationList.items;
+    //     this.incrementCount();
+    //   },
+    //   error: (err) => console.error(err),
+    // });
   }
   getAdmins() {
-    this.httpService.GetAdmins({first:this.first,rows:this.rows,sortField:'id',sortOrder:1}).subscribe({
-      next: (resp) => {
-        this.paginationList = resp;
-        this.users = this.paginationList.items;
-        this.incrementCount();
-      },
-      error: (err) => console.error(err),
-    });
+    // this.httpService.GetAdmins({first:this.first,rows:this.rows,sortField:'id',sortOrder:1}).subscribe({
+    //   next: (resp) => {
+    //     this.paginationList = resp;
+    //     this.users = this.paginationList.items;
+    //     this.incrementCount();
+    //   },
+    //   error: (err) => console.error(err),
+    // });
   }
 
   incrementCount() {
@@ -122,22 +124,22 @@ export class UserService {
 
   updataRole() {
     
-    this.httpService
-      .UpdataRoleUser({
-        userId: this.selectUser?.id,
-        role: this.selectedRole?.code,
-        accountStatus:this.selectedAccountStatus.key=='true'?true:false
-      })
-      .subscribe({
-        next: (resp) => {
-          if (resp) this.toastr.success('Role change', 'successfully');
-          else this.toastr.success('Role change', 'unsuccessful');
-          this.getUserData();
-        },
-        error: (err) => {
-          console.error(err);
-        },
-      });
+    // this.httpService
+    //   .UpdataRoleUser({
+    //     userId: this.selectUser?.id,
+    //     role: this.selectedRole?.code,
+    //     accountStatus:this.selectedAccountStatus.key=='true'?true:false
+    //   })
+    //   .subscribe({
+    //     next: (resp) => {
+    //       if (resp) this.toastr.success('Role change', 'successfully');
+    //       else this.toastr.success('Role change', 'unsuccessful');
+    //       this.getUserData();
+    //     },
+    //     error: (err) => {
+    //       console.error(err);
+    //     },
+    //   });
   }
 
   getFIO() {

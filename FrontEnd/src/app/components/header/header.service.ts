@@ -1,5 +1,5 @@
-import { Injectable, OnInit } from '@angular/core';
-import { HttpService } from '../../services/http.service';
+import { Injectable } from '@angular/core';
+import { AuthService } from '../../pages/auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +8,7 @@ export class HeaderService {
 
 
   
-  constructor(private httpService: HttpService) {}
+  constructor(private authService:AuthService) {}
 
   
 
@@ -26,7 +26,7 @@ export class HeaderService {
 
   LogOut() {
 
-    this.httpService.Logout().subscribe({
+    this.authService.signOut().subscribe({
       next: (resp) => {
         location.reload();
       },

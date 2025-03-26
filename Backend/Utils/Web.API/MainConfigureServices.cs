@@ -1,4 +1,5 @@
-﻿using BaseCrud.PrimeNg;
+﻿using BaseCrud.Abstractions;
+using BaseCrud.PrimeNg;
 using Clients;
 using Clients.TelegramBot.Client;
 using General;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 using System.Text;
 using Web.API.Extensions.Converters;
 
@@ -64,9 +66,11 @@ public static class MainConfigureServices
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"] ?? string.Empty))
             };
         });
-        services.AddEndpointsApiExplorer();
 
         services.AddHttpContextAccessor();
+ 
+
+
         services.AddOpenApiDocument();
         services.AddSwaggerGen(o =>
         {
@@ -130,10 +134,7 @@ public static class MainConfigureServices
                o.JsonSerializerOptions.Converters.Add(new PrimeTableMetaConverter());
                o.JsonSerializerOptions.Converters.Add(new GuidConverter());
            });
-        services.AddAutoMapper(opt =>
-        {
-
-        });
+     
 
         services.AddTransient<AuthorizationHeaderHandler>();
 
@@ -143,7 +144,6 @@ public static class MainConfigureServices
         }).AddHttpMessageHandler<AuthorizationHeaderHandler>();
 
 
-        services.AddHttpContextAccessor();
 
 
         return services;
@@ -154,7 +154,7 @@ public static class MainConfigureServices
         if (app.Environment.IsDevelopment())
         {
             app.UseOpenApi();
-            app.UseSwagger();
+            //app.UseSwagger();
             app.UseSwaggerUI();
 
         }

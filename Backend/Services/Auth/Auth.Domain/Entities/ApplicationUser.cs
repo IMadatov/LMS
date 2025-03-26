@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Auth.Domain.Entities;
 
-public class ApplicationUser:IdentityUser<Guid>,IEntity<Guid>
+public class ApplicationUser: IdentityUser<Guid>,IEntity<Guid>
 {
     [NotMapped]
     public string FullName => $"{LastName} {FirstName}";
@@ -37,6 +37,6 @@ public class ApplicationUser:IdentityUser<Guid>,IEntity<Guid>
 
     public Languages Language { get; set; }
     public string? RefreshToken { get; set; }
-    public DateTime RefreshTokenExpiryTime { get; set; }
+    public DateTime? RefreshTokenExpiryTime { get; set; }
     public string? MainRole { get; set; }
 }

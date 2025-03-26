@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Services\Translation\Domain\Domain.csproj" />
+    <ProjectReference Include="..\..\Services\Translation\Domain\Translation.Domain.csproj" />
     <ProjectReference Include="..\BaseCrud\BaseCrud.Abstractions\BaseCrud.Abstractions.csproj" />
   </ItemGroup>
 

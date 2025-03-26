@@ -8,8 +8,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Login } from '../../../../models/login';
-import { LoginService } from './login.service';
+import { AuthService } from '../../auth.service';
+import { SignInDto } from '../../../../nswag/nswag.auth';
 
 export const reg = RegExp(
   /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/
@@ -27,12 +27,12 @@ export class LoginComponent {
 
   constructor(
     public registerService: RegisterService,
-    private loginService: LoginService
+    private authService:AuthService
   ) { }
 
   public userLogin = new FormGroup({
     userName: new FormControl('', [
-      Validators.minLength(7),
+      Validators.minLength(5),
       Validators.maxLength(25),
       Validators.pattern('^[A-Za-z]+[A-Za-z0-9]*$'),
       Validators.required,
@@ -46,10 +46,19 @@ export class LoginComponent {
   });
 
   submitData() {
-    this.loginService.login({
-      username: this.userLogin.value.userName,
-      password: this.userLogin.value.password,
-      rememberMe: 'true' === this.userLogin.value.rememberme,
-    });
+   this.authService.signIn({
+    password:this.userLogin.controls.password.value?.toString(),
+    username:this.userLogin.controls.userName.value?.toString(),
+    rememberMe:this.userLogin.controls.rememberme.value=='true'?true:false
+   } as SignInDto).subscribe(
+    {
+      next:(resp)=>{
+        if(resp){
+          location.reload();
+          console.log('login success');
+        }
+      }
+    }
+   );
   }
 }

@@ -1,10 +1,9 @@
-import { ChangeDetectorRef, Injectable } from '@angular/core';
-import { HttpService } from '../../../services/http.service';
-import { Transloco } from '../../../models/transloco';
+import { Injectable } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { TableLazyLoadEvent } from 'primeng/table';
-import { Translation, TranslocoService } from '@jsverse/transloco';
+import { TranslocoService } from '@jsverse/transloco';
 import { Subject } from 'rxjs';
+import { PrimeTableMetaData, TranslocoClient, TranslocoDto } from '../../../nswag/nswag.translation';
 
 @Injectable({
   providedIn: 'root'
@@ -18,16 +17,16 @@ export class TranslocoTableService {
   totalItems:number=0;
   globalFilter:string|string[]|null|undefined;
   sortField:string='code';
-  cloneedProducts:{[id:number]:Transloco}={};
+  cloneedProducts:{[id:number]:TranslocoDto}={};
   order=1;
 
   //Subject for global search input waiting
   public searchSubject=new Subject<string>();
   
   //Transloco model
-  translocoList:Transloco[]|undefined;
+  translocoList:TranslocoDto[]|undefined;
 
-  translocoNewItem:Transloco|undefined;
+  translocoNewItem:TranslocoDto|undefined;
   translocoNewItemCode:string|undefined;
   translocoNewItemValueEN:string|undefined;
   translocoNewItemValueRU:string|undefined;
@@ -36,45 +35,54 @@ export class TranslocoTableService {
 
 
   constructor(
-    private httpService:HttpService,
     private toastrService:ToastrService,
-    private translocoService:TranslocoService
+    private translocoService:TranslocoService,
+    private translocoClient:TranslocoClient
   ) { }
 
   GetTranslocoItems(){
-    this.httpService.GetTranslations({first:this.first,rows:this.rows,sortField:this.sortField,sortOrder:this.order,globalFilter:this.globalFilter}).subscribe({
+
+
+    this.translocoClient.getTranslations({first:this.first,rows:this.rows,sortField:this.sortField,sortOrder:this.order,globalFilter:this.globalFilter} as PrimeTableMetaData).subscribe({
       next:(value)=>{
-        this.translocoList=value.items;
-        // this.translocoList?.push({code:"",valueEN:"  ",valueKR:" ",valueRU:"  ",valueUZ:"  ",id:0});
-        this.totalItems=value.totalItems||0;    
+        this.totalItems=value.totalItems||0;
+        this.translocoList=value.items as TranslocoDto[];
       }
-    })
+    });
+
+    // this.httpService.GetTranslations({first:this.first,rows:this.rows,sortField:this.sortField,sortOrder:this.order,globalFilter:this.globalFilter}).subscribe({
+    //   next:(value)=>{
+    //     this.translocoList=value.items;
+    //     // this.translocoList?.push({code:"",valueEN:"  ",valueKR:" ",valueRU:"  ",valueUZ:"  ",id:0});
+    //     this.totalItems=value.totalItems||0;    
+    //   }
+    // })
 
   }
-  onRowEditInit(translocoItem:Transloco){
-    if(translocoItem.id!==undefined)
-    this.cloneedProducts[translocoItem.id!] = { ...translocoItem };
+  onRowEditInit(translocoItem:TranslocoDto){
+    // if(translocoItem.id!==undefined)
+    // this.cloneedProducts[translocoItem.id!] = { ...translocoItem };
 
   }
-  onRowEditSave(translocoItem:Transloco){
+  onRowEditSave(translocoItem:TranslocoDto){
 
     
     if(translocoItem.code?.length!=0){
       
-      this.httpService.InsertWordTransloco(translocoItem).subscribe({
-        next:(value)=>{
-          this.GetTranslocoItems();
+      // this.httpService.InsertWordTransloco(translocoItem).subscribe({
+      //   next:(value)=>{
+      //     this.GetTranslocoItems();
 
-          this.toastrService.success('Transloco item saved');
-        }
-      })
+      //     this.toastrService.success('Transloco item saved');
+      //   }
+      // })
     }
     // this.translocoList?.pop();
     // this.translocoList?.push({code:"",valueEN:"  ",valueKR:" ",valueRU:"  ",valueUZ:"  ",id:0});
     
     delete this.cloneedProducts[translocoItem.id!];
   }
-  onRowEditCancel(translocoItem:Transloco,index:number){
+  onRowEditCancel(translocoItem:TranslocoDto,index:number){
     if(translocoItem.id!=undefined){
       
       if(this.translocoList?.at(index)!=undefined){
@@ -84,11 +92,11 @@ export class TranslocoTableService {
     }
   }
 
-  onRowDelete(translocoItem:Transloco){
-    this.httpService.DeleteWordTransloco(translocoItem).subscribe(()=>{
-      this.GetTranslocoItems();
-      this.toastrService.show("Deleted")
-    });
+  onRowDelete(translocoItem:TranslocoDto){
+    // this.httpService.DeleteWordTransloco(translocoItem).subscribe(()=>{
+    //   this.GetTranslocoItems();
+    //   this.toastrService.show("Deleted")
+    // });
     delete this.cloneedProducts[translocoItem.id!];
   }
 

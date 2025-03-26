@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { AbstractControl, FormGroup, ValidatorFn } from '@angular/forms';
-import { HttpService } from '../../../../services/http.service';
+import { AbstractControl, ValidatorFn } from '@angular/forms';
+import { AuthClient } from '../../../../nswag/nswag.auth';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +9,9 @@ export class SignupService {
 
   checkUserName:boolean|undefined;
 
-  constructor(private httpService:HttpService) {}
+  constructor(
+    private authClient:AuthClient
+  ) {}
 
   patternValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
@@ -42,12 +44,10 @@ export class SignupService {
 
   CheckUserName(name:string){
     
-    
-    this.httpService.CheckUserName(name).subscribe({
+    this.authClient.checkUsername(name).subscribe({
       next:resp=>{
         this.checkUserName=resp;
-      }
-    })
+      }});
   }
 
   

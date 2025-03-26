@@ -1,13 +1,22 @@
 services:
+  gw:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+    ports:
+      - "61001:8080"
   auth.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081 
     ports:
-      - "5290:8080"
+      - "61002:8080"
+      - "62002:8081"
 
-  telegrambot.api:
+  translation.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
     ports:
-      - "5111:8080"
-
+      - "61003:8080"

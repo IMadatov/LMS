@@ -12,9 +12,12 @@ import { loadingInterceptor } from './services/loading.interceptor';
 import { provideToastr } from 'ngx-toastr';
 import { TranslocoHttpLoader } from './transloco-loader';
 import { provideTransloco, provideTranslocoMissingHandler } from '@jsverse/transloco';
-import { CustomMissingHandler } from './custom-missing-handler';
+import { TranslocoCustomMissingHandler } from './custom-missing-handler';
 import { providePrimeNG } from 'primeng/config';
 import primengTheme from './primengTheme';
+import { API_BASE_URL } from './nswag/nswag.auth';
+import { environment } from '../environments/environment';
+import { jwtTokenInterceptor } from './interceptors/jwt-token.interceptor';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
@@ -23,7 +26,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideZoneChangeDetection(),
     provideHttpClient(),
-    provideHttpClient(withInterceptors([loadingInterceptor])),
+    provideHttpClient(withInterceptors([loadingInterceptor,jwtTokenInterceptor])),
     provideToastr(),
     provideHttpClient(),
     provideTransloco({
@@ -40,7 +43,7 @@ export const appConfig: ApplicationConfig = {
       },
       loader: TranslocoHttpLoader,
     }),
-    provideTranslocoMissingHandler(CustomMissingHandler),
+    provideTranslocoMissingHandler(TranslocoCustomMissingHandler),
     providePrimeNG({
       theme:{
         preset:primengTheme,
@@ -48,6 +51,12 @@ export const appConfig: ApplicationConfig = {
           darkModeSelector:'.dark'
         }
       }
-    })
+    }),
+    {
+      provide: API_BASE_URL,
+      useValue: environment.API_BASE_URL,
+    },
+    
+ 
   ],
 };

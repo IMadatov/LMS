@@ -11,6 +11,7 @@ import { TagModule } from 'primeng/tag';
 import { TranslocoTableService } from './transloco-table.service';
 import{IconFieldModule} from 'primeng/iconfield'
 import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { TranslocoCustomMissingHandler } from '../../../custom-missing-handler';
 @Component({
     selector: 'app-transloco',
     imports: [
@@ -35,7 +36,8 @@ export class TranslocoComponent implements AfterViewChecked ,OnInit,OnDestroy{
   elementOnChangeSave: HTMLElement | undefined | null;
 
   constructor(
-    public translocoTableService: TranslocoTableService
+    public translocoTableService: TranslocoTableService,
+    public translocoCustomMissingHandler:TranslocoCustomMissingHandler
   ) {
     
   }
@@ -50,7 +52,7 @@ export class TranslocoComponent implements AfterViewChecked ,OnInit,OnDestroy{
     distinctUntilChanged()
   ).subscribe((globalFilter)=>{
     this.translocoTableService.globalFilter=globalFilter;
-    this.translocoTableService.GetTranslocoItems();
+    // this.translocoTableService.GetTranslocoItems();
   })
   }
 
@@ -60,17 +62,6 @@ export class TranslocoComponent implements AfterViewChecked ,OnInit,OnDestroy{
     }
   }
 
-  @HostListener('window:keydown.enter', ['$event'])
-  ClickEnter(event: any) {
-    console.log(this.elementOnChangeSave);
-    
-    if (this.elementOnChangeSave) {
-      // this.elementOnChangeSave?.click();
-  
-      
-    }
-    
-  }
 
   GlobalFilter(event:any | HTMLInputElement){
     this.translocoTableService.searchSubject.next((event.target as HTMLInputElement).value);

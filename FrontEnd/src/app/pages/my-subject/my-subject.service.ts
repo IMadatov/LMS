@@ -1,11 +1,8 @@
 import { ChangeDetectorRef, Injectable } from '@angular/core';
-import { HttpService } from '../../services/http.service';
 import { ToastrService } from 'ngx-toastr';
 import { Subject } from '../../models/subject';
 import { FormControl } from '@angular/forms';
 import { PaginatorState } from 'primeng/paginator';
-import { SortEvent } from 'primeng/api';
-import { User } from '../../models/user';
 @Injectable({
   providedIn: 'root',
 })
@@ -31,7 +28,6 @@ export class MySubjectService {
 
   changeDetector?: ChangeDetectorRef | null;
   constructor(
-    private httpService: HttpService,
     private toastr: ToastrService
   ) { }
 
@@ -42,11 +38,11 @@ export class MySubjectService {
   }
 
   CreateSubject(name: string) {
-    this.httpService.CreateSubject({ name: name }).subscribe({
-      next: (res) => {
-        this.GetSubjects();
-      },
-    });
+    // this.httpService.CreateSubject({ name: name }).subscribe({
+    //   next: (res) => {
+    //     this.GetSubjects();
+    //   },
+    // });
     this.subjectName.reset();
   }
   DeleteSubject() {
@@ -56,19 +52,19 @@ export class MySubjectService {
     this.listSubjects = remaining;
     this.selecteds.forEach((x) => (x.user = null));
     if (this.selecteds.length != 0) {
-      this.httpService.DeleteSubject(this.selecteds as Subject[]).subscribe({
-        next: (resp) => {
-          // console.log(resp);
+      // this.httpService.DeleteSubject(this.selecteds as Subject[]).subscribe({
+      //   next: (resp) => {
+      //     // console.log(resp);
 
-          if (resp == true) this.toastr.info('Deleteted subjects');
-          else this.toastr.warning('There are no your subjects');
-          this.selecteds = [];
-          this.GetSubjects();
-        },
-        error: (err) => {
-          console.error(err);
-        },
-      });
+      //     if (resp == true) this.toastr.info('Deleteted subjects');
+      //     else this.toastr.warning('There are no your subjects');
+      //     this.selecteds = [];
+      //     this.GetSubjects();
+      //   },
+      //   error: (err) => {
+      //     console.error(err);
+      //   },
+      // });
     }
 
   }
@@ -78,19 +74,19 @@ export class MySubjectService {
       sortField = 'UserId'
     }
 
-    this.httpService
-      .GetSubjects({ first: this.first, rows: this.row, sortField: sortField, sortOrder: this.order })
-      .subscribe({
-        next: (resp) => {
-          this.countMySubjectItems = 0;
-          this.listSubjects = resp.items as Subject[];
-          this.totalItems = resp.totalItems;
+    // this.httpService
+    //   .GetSubjects({ first: this.first, rows: this.row, sortField: sortField, sortOrder: this.order })
+    //   .subscribe({
+    //     next: (resp) => {
+    //       this.countMySubjectItems = 0;
+    //       this.listSubjects = resp.items as Subject[];
+    //       this.totalItems = resp.totalItems;
           
-          this.IncrementList();
-          this.changeDetector?.markForCheck();
-        },
-        error: (err) => console.error(err),
-      });
+    //       this.IncrementList();
+    //       this.changeDetector?.markForCheck();
+    //     },
+    //     error: (err) => console.error(err),
+    //   });
   }
   IncrementList() {
     let counter = 0;

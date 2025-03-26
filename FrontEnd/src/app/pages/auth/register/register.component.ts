@@ -3,8 +3,6 @@ import { DividerModule } from 'primeng/divider';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { TelegramLoginWidgetComponent } from './telegram-login-widget/telegram-login-widget.component';
-import { AuthDataValidator } from '@telegram-auth/server';
-import { TelegramUserData, urlStrToAuthDataMap } from '@telegram-auth/server/utils';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { LoginComponent } from "./login/login.component";
 import { CommonModule, NgIf } from '@angular/common';

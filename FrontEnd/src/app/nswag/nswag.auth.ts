@@ -8,203 +8,243 @@
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
 
-export class AuthClient {
-    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
-    private baseUrl: string;
-    protected jsonParseReviver: (key: string, value: any) => any = undefined;
+import { mergeMap as _observableMergeMap, catchError as _observableCatch } from 'rxjs/operators';
+import { Observable, throwError as _observableThrow, of as _observableOf } from 'rxjs';
+import { Injectable, Inject, Optional, InjectionToken } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angular/common/http';
 
-    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
-        this.http = http ? http : window as any;
+export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
+
+export interface IAuthClient {
+    signOut(): Observable<boolean>;
+    signIn(signInDto: SignInDto): Observable<JWTTokenModel>;
+    refreshToken(model: JWTTokenModel): Observable<JWTTokenModel>;
+    onSite(): Observable<string>;
+    signUpWithTelegram(telegramData: string | undefined, userTelegram: UserTeleramDTO): Observable<boolean>;
+    checkUser(userTelegramData: string | undefined): Observable<boolean>;
+    checkUsername(username: string | undefined): Observable<boolean>;
+    checkTelegramData(telegramData: string | undefined): Observable<boolean>;
+    getUserAsTelegramBot(id: string | undefined): Observable<FileResponse>;
+    changeRole(userId: string | undefined, toRole: string | undefined): Observable<JWTTokenModel>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class AuthClient implements IAuthClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
         this.baseUrl = baseUrl ?? "";
     }
 
-    signUp(signUp: SignUpDto): Promise<boolean> {
-        let url_ = this.baseUrl + "/api/Auth/SignUp";
+    signOut(): Observable<boolean> {
+        let url_ = this.baseUrl + "/api/auth/Auth/SignOut";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(signUp);
-
-        let options_: RequestInit = {
-            body: content_,
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Accept": "application/json"
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processSignUp(_response);
-        });
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSignOut(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSignOut(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<boolean>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<boolean>;
+        }));
     }
 
-    protected processSignUp(response: Response): Promise<boolean> {
+    protected processSignOut(response: HttpResponseBase): Observable<boolean> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = resultData200 !== undefined ? resultData200 : <any>null;
     
-            return result200;
-            });
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<boolean>(null as any);
+        return _observableOf(null as any);
     }
 
-    signOut(): Promise<boolean> {
-        let url_ = this.baseUrl + "/api/Auth/SignOut";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: RequestInit = {
-            method: "POST",
-            headers: {
-                "Accept": "application/json"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processSignOut(_response);
-        });
-    }
-
-    protected processSignOut(response: Response): Promise<boolean> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 !== undefined ? resultData200 : <any>null;
-    
-            return result200;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<boolean>(null as any);
-    }
-
-    signIn(signInDto: SignInDto): Promise<JWTTokenModel> {
-        let url_ = this.baseUrl + "/api/Auth/SignIn";
+    signIn(signInDto: SignInDto): Observable<JWTTokenModel> {
+        let url_ = this.baseUrl + "/api/auth/Auth/SignIn";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(signInDto);
 
-        let options_: RequestInit = {
+        let options_ : any = {
             body: content_,
-            method: "POST",
-            headers: {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Content-Type": "application/json",
                 "Accept": "application/json"
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processSignIn(_response);
-        });
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSignIn(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSignIn(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<JWTTokenModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<JWTTokenModel>;
+        }));
     }
 
-    protected processSignIn(response: Response): Promise<JWTTokenModel> {
+    protected processSignIn(response: HttpResponseBase): Observable<JWTTokenModel> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = JWTTokenModel.fromJS(resultData200);
-            return result200;
-            });
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<JWTTokenModel>(null as any);
+        return _observableOf(null as any);
     }
 
-    refreshToken(model: JWTTokenModel): Promise<JWTTokenModel> {
-        let url_ = this.baseUrl + "/api/Auth/RefreshToken";
+    refreshToken(model: JWTTokenModel): Observable<JWTTokenModel> {
+        let url_ = this.baseUrl + "/api/auth/Auth/RefreshToken";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(model);
 
-        let options_: RequestInit = {
+        let options_ : any = {
             body: content_,
-            method: "POST",
-            headers: {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Content-Type": "application/json",
                 "Accept": "application/json"
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processRefreshToken(_response);
-        });
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRefreshToken(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRefreshToken(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<JWTTokenModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<JWTTokenModel>;
+        }));
     }
 
-    protected processRefreshToken(response: Response): Promise<JWTTokenModel> {
+    protected processRefreshToken(response: HttpResponseBase): Observable<JWTTokenModel> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = JWTTokenModel.fromJS(resultData200);
-            return result200;
-            });
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<JWTTokenModel>(null as any);
+        return _observableOf(null as any);
     }
 
-    onSite(): Promise<string> {
-        let url_ = this.baseUrl + "/api/Auth/OnSite";
+    onSite(): Observable<string> {
+        let url_ = this.baseUrl + "/api/auth/Auth/OnSite";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: RequestInit = {
-            method: "GET",
-            headers: {
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Accept": "application/json"
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processOnSite(_response);
-        });
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processOnSite(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processOnSite(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<string>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<string>;
+        }));
     }
 
-    protected processOnSite(response: Response): Promise<string> {
+    protected processOnSite(response: HttpResponseBase): Observable<string> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = resultData200 !== undefined ? resultData200 : <any>null;
     
-            return result200;
-            });
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<string>(null as any);
+        return _observableOf(null as any);
     }
 
-    signUpWithTelegram(telegramData: string, userTelegram: UserTeleramDTO): Promise<boolean> {
-        let url_ = this.baseUrl + "/api/Auth/SignUpWithTelegram?";
+    signUpWithTelegram(telegramData: string | undefined, userTelegram: UserTeleramDTO): Observable<boolean> {
+        let url_ = this.baseUrl + "/api/auth/Auth/SignUpWithTelegram?";
         if (telegramData === null)
             throw new Error("The parameter 'telegramData' cannot be null.");
         else if (telegramData !== undefined)
@@ -213,179 +253,249 @@ export class AuthClient {
 
         const content_ = JSON.stringify(userTelegram);
 
-        let options_: RequestInit = {
+        let options_ : any = {
             body: content_,
-            method: "POST",
-            headers: {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Content-Type": "application/json",
                 "Accept": "application/json"
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processSignUpWithTelegram(_response);
-        });
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSignUpWithTelegram(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSignUpWithTelegram(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<boolean>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<boolean>;
+        }));
     }
 
-    protected processSignUpWithTelegram(response: Response): Promise<boolean> {
+    protected processSignUpWithTelegram(response: HttpResponseBase): Observable<boolean> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = resultData200 !== undefined ? resultData200 : <any>null;
     
-            return result200;
-            });
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<boolean>(null as any);
+        return _observableOf(null as any);
     }
 
-    checkUser(userTelegramData: string): Promise<boolean> {
-        let url_ = this.baseUrl + "/api/Auth/CheckUser?";
+    checkUser(userTelegramData: string | undefined): Observable<boolean> {
+        let url_ = this.baseUrl + "/api/auth/Auth/CheckUser?";
         if (userTelegramData === null)
             throw new Error("The parameter 'userTelegramData' cannot be null.");
         else if (userTelegramData !== undefined)
             url_ += "userTelegramData=" + encodeURIComponent("" + userTelegramData) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: RequestInit = {
-            method: "POST",
-            headers: {
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Accept": "application/json"
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processCheckUser(_response);
-        });
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCheckUser(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCheckUser(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<boolean>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<boolean>;
+        }));
     }
 
-    protected processCheckUser(response: Response): Promise<boolean> {
+    protected processCheckUser(response: HttpResponseBase): Observable<boolean> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = resultData200 !== undefined ? resultData200 : <any>null;
     
-            return result200;
-            });
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<boolean>(null as any);
+        return _observableOf(null as any);
     }
 
-    checkUsername(username: string): Promise<boolean> {
-        let url_ = this.baseUrl + "/api/Auth/CheckUsername?";
+    checkUsername(username: string | undefined): Observable<boolean> {
+        let url_ = this.baseUrl + "/api/auth/Auth/CheckUsername?";
         if (username === null)
             throw new Error("The parameter 'username' cannot be null.");
         else if (username !== undefined)
             url_ += "username=" + encodeURIComponent("" + username) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: RequestInit = {
-            method: "GET",
-            headers: {
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Accept": "application/json"
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processCheckUsername(_response);
-        });
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCheckUsername(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCheckUsername(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<boolean>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<boolean>;
+        }));
     }
 
-    protected processCheckUsername(response: Response): Promise<boolean> {
+    protected processCheckUsername(response: HttpResponseBase): Observable<boolean> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = resultData200 !== undefined ? resultData200 : <any>null;
     
-            return result200;
-            });
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<boolean>(null as any);
+        return _observableOf(null as any);
     }
 
-    checkTelegramData(telegramData: string): Promise<boolean> {
-        let url_ = this.baseUrl + "/api/Auth/CheckTelegramData?";
+    checkTelegramData(telegramData: string | undefined): Observable<boolean> {
+        let url_ = this.baseUrl + "/api/auth/Auth/CheckTelegramData?";
         if (telegramData === null)
             throw new Error("The parameter 'telegramData' cannot be null.");
         else if (telegramData !== undefined)
             url_ += "telegramData=" + encodeURIComponent("" + telegramData) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: RequestInit = {
-            method: "POST",
-            headers: {
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Accept": "application/json"
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processCheckTelegramData(_response);
-        });
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCheckTelegramData(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCheckTelegramData(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<boolean>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<boolean>;
+        }));
     }
 
-    protected processCheckTelegramData(response: Response): Promise<boolean> {
+    protected processCheckTelegramData(response: HttpResponseBase): Observable<boolean> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = resultData200 !== undefined ? resultData200 : <any>null;
     
-            return result200;
-            });
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<boolean>(null as any);
+        return _observableOf(null as any);
     }
 
-    getUserAsTelegramBot(id: string): Promise<FileResponse> {
-        let url_ = this.baseUrl + "/api/Auth/GetUserAsTelegramBot?";
+    getUserAsTelegramBot(id: string | undefined): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/auth/Auth/GetUserAsTelegramBot?";
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
         else if (id !== undefined)
             url_ += "id=" + encodeURIComponent("" + id) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: RequestInit = {
-            method: "POST",
-            headers: {
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Accept": "application/octet-stream"
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processGetUserAsTelegramBot(_response);
-        });
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetUserAsTelegramBot(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetUserAsTelegramBot(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<FileResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<FileResponse>;
+        }));
     }
 
-    protected processGetUserAsTelegramBot(response: Response): Promise<FileResponse> {
+    protected processGetUserAsTelegramBot(response: HttpResponseBase): Observable<FileResponse> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200 || status === 206) {
             const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
             let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
@@ -396,105 +506,291 @@ export class AuthClient {
                 fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
                 fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
             }
-            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+            return _observableOf({ fileName: fileName, data: responseBlob as any, status: status, headers: _headers });
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<FileResponse>(null as any);
+        return _observableOf(null as any);
     }
 
-    init(): Promise<boolean> {
-        let url_ = this.baseUrl + "/api/Auth/Init";
+    changeRole(userId: string | undefined, toRole: string | undefined): Observable<JWTTokenModel> {
+        let url_ = this.baseUrl + "/api/auth/Auth/ChangeRole?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "UserId=" + encodeURIComponent("" + userId) + "&";
+        if (toRole === null)
+            throw new Error("The parameter 'toRole' cannot be null.");
+        else if (toRole !== undefined)
+            url_ += "ToRole=" + encodeURIComponent("" + toRole) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: RequestInit = {
-            method: "PUT",
-            headers: {
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Accept": "application/json"
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processInit(_response);
-        });
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processChangeRole(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processChangeRole(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<JWTTokenModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<JWTTokenModel>;
+        }));
     }
 
-    protected processInit(response: Response): Promise<boolean> {
+    protected processChangeRole(response: HttpResponseBase): Observable<JWTTokenModel> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 !== undefined ? resultData200 : <any>null;
-    
-            return result200;
-            });
+            result200 = JWTTokenModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<boolean>(null as any);
+        return _observableOf(null as any);
     }
 }
 
-export class SignUpDto implements ISignUpDto {
-    email?: string;
-    password?: string;
-    firstName?: string;
-    lastName?: string;
-    userName?: string;
-    rememberme?: string;
-
-    constructor(data?: ISignUpDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.email = _data["email"];
-            this.password = _data["password"];
-            this.firstName = _data["firstName"];
-            this.lastName = _data["lastName"];
-            this.userName = _data["userName"];
-            this.rememberme = _data["rememberme"];
-        }
-    }
-
-    static fromJS(data: any): SignUpDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new SignUpDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["email"] = this.email;
-        data["password"] = this.password;
-        data["firstName"] = this.firstName;
-        data["lastName"] = this.lastName;
-        data["userName"] = this.userName;
-        data["rememberme"] = this.rememberme;
-        return data;
-    }
+export interface IUserClient {
+    me(): Observable<UserDto>;
+    getAll(dataTableMetaData: PrimeTableMetaData): Observable<QueryResultOfUserDto>;
+    myLanguage(): Observable<LanguageDto>;
+    changeMyLanguage(lang: string | undefined): Observable<LanguageDto>;
 }
 
-export interface ISignUpDto {
-    email?: string;
-    password?: string;
-    firstName?: string;
-    lastName?: string;
-    userName?: string;
-    rememberme?: string;
+@Injectable({
+    providedIn: 'root'
+})
+export class UserClient implements IUserClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    me(): Observable<UserDto> {
+        let url_ = this.baseUrl + "/api/auth/User/Me";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processMe(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processMe(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<UserDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<UserDto>;
+        }));
+    }
+
+    protected processMe(response: HttpResponseBase): Observable<UserDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UserDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getAll(dataTableMetaData: PrimeTableMetaData): Observable<QueryResultOfUserDto> {
+        let url_ = this.baseUrl + "/api/auth/User/GetAll";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(dataTableMetaData);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<QueryResultOfUserDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<QueryResultOfUserDto>;
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<QueryResultOfUserDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = QueryResultOfUserDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    myLanguage(): Observable<LanguageDto> {
+        let url_ = this.baseUrl + "/api/auth/User/MyLanguage";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processMyLanguage(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processMyLanguage(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<LanguageDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<LanguageDto>;
+        }));
+    }
+
+    protected processMyLanguage(response: HttpResponseBase): Observable<LanguageDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = LanguageDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    changeMyLanguage(lang: string | undefined): Observable<LanguageDto> {
+        let url_ = this.baseUrl + "/api/auth/User/ChangeMyLanguage?";
+        if (lang === null)
+            throw new Error("The parameter 'lang' cannot be null.");
+        else if (lang !== undefined)
+            url_ += "lang=" + encodeURIComponent("" + lang) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processChangeMyLanguage(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processChangeMyLanguage(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<LanguageDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<LanguageDto>;
+        }));
+    }
+
+    protected processChangeMyLanguage(response: HttpResponseBase): Observable<LanguageDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = LanguageDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
 }
 
 export class JWTTokenModel implements IJWTTokenModel {
@@ -582,7 +878,7 @@ export interface ISignInDto {
 }
 
 export class UserTeleramDTO implements IUserTeleramDTO {
-    email?: string;
+    email?: string | undefined;
     userName?: string;
     password?: string;
 
@@ -620,9 +916,357 @@ export class UserTeleramDTO implements IUserTeleramDTO {
 }
 
 export interface IUserTeleramDTO {
-    email?: string;
+    email?: string | undefined;
     userName?: string;
     password?: string;
+}
+
+export class UserDto implements IUserDto {
+    id?: string;
+    telegramId?: string | undefined;
+    userName?: string | undefined;
+    email?: string | undefined;
+    firstName?: string | undefined;
+    lastName?: string | undefined;
+    photoUrl?: string | undefined;
+    telegramUserName?: string | undefined;
+    createdDate?: Date | undefined;
+    language?: Languages;
+    strLanguage?: string;
+    active?: boolean;
+    statusUser?: StatusUserDto | undefined;
+    roles?: string[];
+
+    constructor(data?: IUserDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.telegramId = _data["telegramId"];
+            this.userName = _data["userName"];
+            this.email = _data["email"];
+            this.firstName = _data["firstName"];
+            this.lastName = _data["lastName"];
+            this.photoUrl = _data["photoUrl"];
+            this.telegramUserName = _data["telegramUserName"];
+            this.createdDate = _data["createdDate"] ? new Date(_data["createdDate"].toString()) : <any>undefined;
+            this.language = _data["language"];
+            this.strLanguage = _data["strLanguage"];
+            this.active = _data["active"];
+            this.statusUser = _data["statusUser"] ? StatusUserDto.fromJS(_data["statusUser"]) : <any>undefined;
+            if (Array.isArray(_data["roles"])) {
+                this.roles = [] as any;
+                for (let item of _data["roles"])
+                    this.roles!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): UserDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["telegramId"] = this.telegramId;
+        data["userName"] = this.userName;
+        data["email"] = this.email;
+        data["firstName"] = this.firstName;
+        data["lastName"] = this.lastName;
+        data["photoUrl"] = this.photoUrl;
+        data["telegramUserName"] = this.telegramUserName;
+        data["createdDate"] = this.createdDate ? this.createdDate.toISOString() : <any>undefined;
+        data["language"] = this.language;
+        data["strLanguage"] = this.strLanguage;
+        data["active"] = this.active;
+        data["statusUser"] = this.statusUser ? this.statusUser.toJSON() : <any>undefined;
+        if (Array.isArray(this.roles)) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item);
+        }
+        return data;
+    }
+}
+
+export interface IUserDto {
+    id?: string;
+    telegramId?: string | undefined;
+    userName?: string | undefined;
+    email?: string | undefined;
+    firstName?: string | undefined;
+    lastName?: string | undefined;
+    photoUrl?: string | undefined;
+    telegramUserName?: string | undefined;
+    createdDate?: Date | undefined;
+    language?: Languages;
+    strLanguage?: string;
+    active?: boolean;
+    statusUser?: StatusUserDto | undefined;
+    roles?: string[];
+}
+
+export enum Languages {
+    ENGLISH = 0,
+    UZBEK = 1,
+    RUSSIAN = 2,
+    KARAKALPAK = 3,
+}
+
+export class StatusUserDto implements IStatusUserDto {
+    id?: string;
+    isOnTelegramBotActive?: boolean;
+    hasPhotoProfile?: boolean;
+
+    constructor(data?: IStatusUserDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.isOnTelegramBotActive = _data["isOnTelegramBotActive"];
+            this.hasPhotoProfile = _data["hasPhotoProfile"];
+        }
+    }
+
+    static fromJS(data: any): StatusUserDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusUserDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["isOnTelegramBotActive"] = this.isOnTelegramBotActive;
+        data["hasPhotoProfile"] = this.hasPhotoProfile;
+        return data;
+    }
+}
+
+export interface IStatusUserDto {
+    id?: string;
+    isOnTelegramBotActive?: boolean;
+    hasPhotoProfile?: boolean;
+}
+
+export class QueryResultOfUserDto implements IQueryResultOfUserDto {
+    items?: UserDto[];
+    totalItems?: number;
+
+    constructor(data?: IQueryResultOfUserDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(UserDto.fromJS(item));
+            }
+            this.totalItems = _data["totalItems"];
+        }
+    }
+
+    static fromJS(data: any): QueryResultOfUserDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new QueryResultOfUserDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalItems"] = this.totalItems;
+        return data;
+    }
+}
+
+export interface IQueryResultOfUserDto {
+    items?: UserDto[];
+    totalItems?: number;
+}
+
+export class PrimeTableMetaData implements IPrimeTableMetaData {
+    first?: number;
+    rows?: number;
+    filters?: { [key: string]: FilterMetadata; };
+    sortField?: string | undefined;
+    sortOrder?: number;
+    globalFilter?: string | undefined;
+
+    constructor(data?: IPrimeTableMetaData) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.rows = 10;
+            this.sortField = "id";
+            this.sortOrder = 1;
+            this.globalFilter = "";
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.first = _data["first"];
+            this.rows = _data["rows"] !== undefined ? _data["rows"] : 10;
+            if (_data["filters"]) {
+                this.filters = {} as any;
+                for (let key in _data["filters"]) {
+                    if (_data["filters"].hasOwnProperty(key))
+                        (<any>this.filters)![key] = _data["filters"][key] ? FilterMetadata.fromJS(_data["filters"][key]) : new FilterMetadata();
+                }
+            }
+            this.sortField = _data["sortField"] !== undefined ? _data["sortField"] : "id";
+            this.sortOrder = _data["sortOrder"] !== undefined ? _data["sortOrder"] : 1;
+            this.globalFilter = _data["globalFilter"] !== undefined ? _data["globalFilter"] : "";
+        }
+    }
+
+    static fromJS(data: any): PrimeTableMetaData {
+        data = typeof data === 'object' ? data : {};
+        let result = new PrimeTableMetaData();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["first"] = this.first;
+        data["rows"] = this.rows;
+        if (this.filters) {
+            data["filters"] = {};
+            for (let key in this.filters) {
+                if (this.filters.hasOwnProperty(key))
+                    (<any>data["filters"])[key] = this.filters[key] ? this.filters[key].toJSON() : <any>undefined;
+            }
+        }
+        data["sortField"] = this.sortField;
+        data["sortOrder"] = this.sortOrder;
+        data["globalFilter"] = this.globalFilter;
+        return data;
+    }
+}
+
+export interface IPrimeTableMetaData {
+    first?: number;
+    rows?: number;
+    filters?: { [key: string]: FilterMetadata; };
+    sortField?: string | undefined;
+    sortOrder?: number;
+    globalFilter?: string | undefined;
+}
+
+export class FilterMetadata implements IFilterMetadata {
+    value?: any | undefined;
+    matchMode?: string | undefined;
+
+    constructor(data?: IFilterMetadata) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.matchMode = "equals";
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.value = _data["value"];
+            this.matchMode = _data["matchMode"] !== undefined ? _data["matchMode"] : "equals";
+        }
+    }
+
+    static fromJS(data: any): FilterMetadata {
+        data = typeof data === 'object' ? data : {};
+        let result = new FilterMetadata();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["value"] = this.value;
+        data["matchMode"] = this.matchMode;
+        return data;
+    }
+}
+
+export interface IFilterMetadata {
+    value?: any | undefined;
+    matchMode?: string | undefined;
+}
+
+export class LanguageDto implements ILanguageDto {
+    language?: string;
+
+    constructor(data?: ILanguageDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.language = _data["language"];
+        }
+    }
+
+    static fromJS(data: any): LanguageDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new LanguageDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["language"] = this.language;
+        return data;
+    }
+}
+
+export interface ILanguageDto {
+    language?: string;
 }
 
 export interface FileResponse {
@@ -633,7 +1277,7 @@ export interface FileResponse {
 }
 
 export class SwaggerException extends Error {
-    message: string;
+    override message: string;
     status: number;
     response: string;
     headers: { [key: string]: any; };
@@ -656,9 +1300,25 @@ export class SwaggerException extends Error {
     }
 }
 
-function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): any {
+function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): Observable<any> {
     if (result !== null && result !== undefined)
-        throw result;
+        return _observableThrow(result);
     else
-        throw new SwaggerException(message, status, response, headers, null);
+        return _observableThrow(new SwaggerException(message, status, response, headers, null));
+}
+
+function blobToText(blob: any): Observable<string> {
+    return new Observable<string>((observer: any) => {
+        if (!blob) {
+            observer.next("");
+            observer.complete();
+        } else {
+            let reader = new FileReader();
+            reader.onload = event => {
+                observer.next((event.target as any).result);
+                observer.complete();
+            };
+            reader.readAsText(blob);
+        }
+    });
 }

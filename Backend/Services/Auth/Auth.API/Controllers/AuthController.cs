@@ -18,12 +18,6 @@ public class AuthController(
     TelegramBotClient telegramBotClient
     ) : BaseController
 {
-
-    [HttpPost]
-    [Authorize(Roles = "admin")]
-    public async Task<ActionResult<bool>> SignUp(SignUpDto signUp) =>
-        await FromServiceResult(authService.SignUpAsync(signUp));
-
     [HttpPost]
     public async Task<ActionResult<bool>> SignOut() =>
         await FromServiceResult(authService.SignOutAsync());
@@ -55,11 +49,9 @@ public class AuthController(
     public async Task<ActionResult<bool>> CheckUsername(string username)
         => await FromServiceResult(authService.CheckUsername(username));
 
-
     [HttpPost]
     public async Task<ActionResult<bool>> CheckTelegramData(string telegramData)
         => await FromServiceResult(authService.CheckTelegramData(telegramData));
-
 
     [HttpPost]
     public async Task<ActionResult> GetUserAsTelegramBot(string id)
@@ -77,15 +69,9 @@ public class AuthController(
             Console.WriteLine(ex.Message);
             return BadRequest(ex.Message);
         }
-
-
-
     }
 
-
-    [HttpPut]
-    public async Task<ActionResult<bool>> Init()
-        => await FromServiceResult(userService.Init());
-
-
+    [HttpPost]
+    public async Task<ActionResult<JWTTokenModel?>> ChangeRole(string UserId,string ToRole) =>
+        await FromServiceResult(authService.ChangeMainRole(UserId,ToRole));
 }

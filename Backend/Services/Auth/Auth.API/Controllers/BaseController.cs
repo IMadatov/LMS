@@ -7,7 +7,7 @@ using Minerals.StringCases;
 
 namespace Auth.API.Controllers;
 
-[Route("api/[controller]/[action]")]
+[Route("api/auth/[controller]/[action]")]
 [ApiController]
 public class BaseController: ControllerBase
 {

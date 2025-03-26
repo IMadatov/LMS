@@ -19,11 +19,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Translation", "Translation"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Translation.Application", "Services\Translation\Application\Translation.Application.csproj", "{72DC24CC-AFFB-4EA5-8D8F-1104E620B902}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Services\Translation\Domain\Domain.csproj", "{FDF7B097-EE48-412E-A3E1-ACF5BA0E20AF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Translation.Domain", "Services\Translation\Domain\Translation.Domain.csproj", "{FDF7B097-EE48-412E-A3E1-ACF5BA0E20AF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GTranslate", "Services\Translation\GTranslate\GTranslate.csproj", "{A5BEFC84-76AC-46FF-8B20-723650209AB3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Services\Translation\Infrastructure\Infrastructure.csproj", "{CDA79786-C9DE-4D3E-BA51-08F4E02AEBB3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Translation.Infrastructure", "Services\Translation\Infrastructure\Translation.Infrastructure.csproj", "{CDA79786-C9DE-4D3E-BA51-08F4E02AEBB3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utils", "Utils", "{F77D12EA-9ED7-4AB2-95A9-3061B17A03CC}"
 EndProject
@@ -65,9 +65,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelegramBot.Domain", "Servi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelegramBot.API", "Services\Telegram\TelegramBot\TelegramBot.API\TelegramBot.API.csproj", "{2590D955-1869-481C-A516-FFD7CD604F4B}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{A1941007-696E-4237-A14B-A8631649E2AE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clients", "Utils\Clients\Clients.csproj", "{8036242A-9702-4689-97F7-619F1B080D7D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GWAPI", "GWAPI", "{79C040C5-36D1-49D5-8995-3EF96BECC5C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GW", "Services\GWAPI\GW\GW.csproj", "{E31CF0B1-9C26-4CFB-BB82-C67D6F328E02}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{53365B0F-83A3-4B37-A055-36A1F9B017C0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -167,14 +171,18 @@ Global
 		{2590D955-1869-481C-A516-FFD7CD604F4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2590D955-1869-481C-A516-FFD7CD604F4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2590D955-1869-481C-A516-FFD7CD604F4B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A1941007-696E-4237-A14B-A8631649E2AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A1941007-696E-4237-A14B-A8631649E2AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A1941007-696E-4237-A14B-A8631649E2AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A1941007-696E-4237-A14B-A8631649E2AE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8036242A-9702-4689-97F7-619F1B080D7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8036242A-9702-4689-97F7-619F1B080D7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8036242A-9702-4689-97F7-619F1B080D7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8036242A-9702-4689-97F7-619F1B080D7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E31CF0B1-9C26-4CFB-BB82-C67D6F328E02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E31CF0B1-9C26-4CFB-BB82-C67D6F328E02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E31CF0B1-9C26-4CFB-BB82-C67D6F328E02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E31CF0B1-9C26-4CFB-BB82-C67D6F328E02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53365B0F-83A3-4B37-A055-36A1F9B017C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53365B0F-83A3-4B37-A055-36A1F9B017C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53365B0F-83A3-4B37-A055-36A1F9B017C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53365B0F-83A3-4B37-A055-36A1F9B017C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -210,6 +218,8 @@ Global
 		{9DBC9639-5243-45F8-B46F-5B9169B33BC4} = {147DE48B-333E-49D6-A595-B0983383D5EE}
 		{2590D955-1869-481C-A516-FFD7CD604F4B} = {147DE48B-333E-49D6-A595-B0983383D5EE}
 		{8036242A-9702-4689-97F7-619F1B080D7D} = {F77D12EA-9ED7-4AB2-95A9-3061B17A03CC}
+		{79C040C5-36D1-49D5-8995-3EF96BECC5C5} = {82421E6F-EAAC-4747-B6F5-5C06A401C18C}
+		{E31CF0B1-9C26-4CFB-BB82-C67D6F328E02} = {79C040C5-36D1-49D5-8995-3EF96BECC5C5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {44332C63-E5BE-4E25-8387-BC0BA8E15A19}

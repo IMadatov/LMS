@@ -16,7 +16,7 @@ import { Transloco } from '../models/transloco';
 @Injectable({
   providedIn: 'root',
 })
-export class HttpService {
+export class dsadsa {
 
 
 

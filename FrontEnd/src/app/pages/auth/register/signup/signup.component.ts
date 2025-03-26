@@ -27,7 +27,10 @@ export class SignupComponent {
   public isPasswordShow=false;
 
 
-  constructor(public registerService: RegisterService,public signUpService:SignupService) {}
+  constructor(
+    public registerService: RegisterService,
+    public signUpService:SignupService
+  ) {}
 
   public userSignUp = new FormGroup(
     {

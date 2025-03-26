@@ -1,26 +1,33 @@
 using Auth.Application;
+using Auth.Domain.Entities;
 using Auth.Infrastructure;
+using BaseCrud.Abstractions;
+using System.Reflection;
 using Web.API;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-
 builder.Services
     .InfrastructureServices(builder.Configuration)
     .AddApplicationService(builder.Configuration)
     .AddMainConfigureServices(builder.Configuration);
 
+builder.Services.AddBaseCrudService(new BaseCrud.BaseCrudServiceOptions
+{
+    Assemblies = [
+        Assembly.GetExecutingAssembly(),
+        Assembly.GetAssembly(typeof(ApplicationServicesRegistration))!,
+        Assembly.GetAssembly(typeof(ApplicationUser))!,
+        Assembly.GetAssembly(typeof(InfrastructureServiceRegistration))!
+    ]
+});
+
 
 var app = await builder.Build()
 .MainConfigure()
+.AuthApplicationConfig()
 .MainConfigurationMigrationAsync();
-
-// Configure the HTTP request pipeline.
-
-app.UseHttpsRedirection();
-
 
 
 app.Run();

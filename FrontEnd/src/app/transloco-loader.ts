@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { Translation, TranslocoLoader } from "@jsverse/transloco";
 import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
 export class TranslocoHttpLoader implements TranslocoLoader {
@@ -9,9 +9,11 @@ export class TranslocoHttpLoader implements TranslocoLoader {
 
     getTranslation(lang: string):Observable<Translation> {
         
-        return this.http.post<Translation>( "https://localhost:7101/api/Transloco/CurrentLanguage?lang="+lang,{},
-            {
-            withCredentials:true
-        });
+        return of([]);
+
+        // return this.http.post<Translation>( "https://localhost:7101/api/Transloco/CurrentLanguage?lang="+lang,{},
+        //     {
+        //     withCredentials:true
+        // });
     }
 }

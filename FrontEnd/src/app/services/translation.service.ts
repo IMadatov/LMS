@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpService } from './http.service';
 import { TranslocoService } from '@jsverse/transloco';
-import { map, Subscription, take } from 'rxjs';
+import { UserClient } from '../nswag/nswag.auth';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TranslationService {
   constructor(
-    private httpService: HttpService,
+    private userClient:UserClient,
     private translocoService: TranslocoService
   ) {
     this.SetCurrentLanguageAsActiveLangTransloco();
@@ -62,21 +61,22 @@ export class TranslationService {
   // }
 
   GetCurrentLanguage() {
-    this.httpService.UserLanguage().subscribe({
-      next: (value) => {
-       this.translocoService.setActiveLang(value.language) 
-      this.SetCurrentLanguageAsActiveLangTransloco();
-            
-        // this.BuildSubscribtion();
+    
+    this.userClient.myLanguage().subscribe({
+      next:(value)=>{
+        this.translocoService.setActiveLang(value.language||"en");
+        this.SetCurrentLanguageAsActiveLangTransloco();
       }
-
     });
   }
 
   ChangeLanguageUser(){
-    this.httpService.ChangeLanguage(this.currentLanguage?.code||'en').subscribe((value)=>{
-      this.translocoService.setActiveLang(value.language);
-    });
+
+    this.userClient.changeMyLanguage(this.currentLanguage?.code||"en").subscribe({
+      next:(value)=>{
+        this.translocoService.setActiveLang(value.language||"en");
+      }});
+    
   }
 
 }

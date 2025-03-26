@@ -1,5 +1,6 @@
 ﻿using BaseCrud.Abstractions.Entities;
 using BaseCrud.Abstractions.Services;
+using BaseCrud.ServiceResults;
 using Domain.ModelDtos;
 using Domain.Models;
 
@@ -12,4 +13,5 @@ public interface ITranslocoService:ICrudService<Transloco,TranslocoDto,Transloco
 
     Task<string> CurrentLanguage(string lang);
     Task<bool> DeleteAsync(int id, IUserProfile<Guid>? userProfile);
+    Task<ServiceResult<bool>> InsertAutoTranslation(List<TranslocoDto> translocoDtos);
 }
