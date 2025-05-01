@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Auth.Client\" />
     <Folder Include="TelegramBot.Client\" />
   </ItemGroup>
 

@@ -1,9 +1,7 @@
 ﻿using Auth.Application.Services;
 using Auth.Domain.DTOs;
-using Auth.Infrastructure.Context;
-using Clients;
+using Auth.Domain.Entities;
 using Clients.TelegramBot.Client;
-using General.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,19 +16,20 @@ public class AuthController(
     TelegramBotClient telegramBotClient
     ) : BaseController
 {
-    [HttpPost]
-    public async Task<ActionResult<bool>> SignOut() =>
-        await FromServiceResult(authService.SignOutAsync());
+    //[HttpPost]
+    //public async Task<ActionResult<bool>> SignOut() =>
+    //    await FromServiceResult(authService.SignOutAsync());
 
     [HttpPost]
-    public async Task<ActionResult<JWTTokenModel>> SignInAsync(SignInDto signInDto)
+    public async Task<ActionResult<JWTTokenModel?>> SignInAsync(SignInDto signInDto)
         => await FromServiceResult(authService.SignInAsync(signInDto));
 
     [HttpPost]
-    public async Task<ActionResult<JWTTokenModel>> RefreshToken(JWTTokenModel model)
+    public async Task<ActionResult<JWTTokenModel?>> RefreshToken(JWTTokenModel model)
         => await FromServiceResult(authService.RefreshToken(model));
 
     [HttpGet]
+    [Authorize]
     public async Task<ActionResult<string?>> OnSite()
         => await FromServiceResult(authService.OnSite());
 
@@ -74,4 +73,11 @@ public class AuthController(
     [HttpPost]
     public async Task<ActionResult<JWTTokenModel?>> ChangeRole(string UserId,string ToRole) =>
         await FromServiceResult(authService.ChangeMainRole(UserId,ToRole));
+
+    [HttpGet]
+    [Authorize(Roles= "admin")]
+    public async Task<ActionResult<List<ApplicationRole>>> GetRoles()
+    {
+        return await authService.GetRoles();
+    } 
 }

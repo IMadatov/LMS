@@ -2,22 +2,21 @@ import { Injectable } from '@angular/core';
 import { NavigationItem } from '../../models/navigation-item';
 import { defaultNavigation } from './navigations';
 import { Roles } from '../../models/roles';
-import { User } from '../../models/user';
 import { SignalrService } from '../../services/signalr.service';
-import { UrlSegment } from '@angular/router';
+import { Router, UrlSegment } from '@angular/router';
 import { MySubjectService } from '../my-subject/my-subject.service';
 import { AuthClient, JWTTokenModel, SignInDto, UserClient, UserDto } from '../../nswag/nswag.auth';
 import { catchError, map, Observable, of, ReplaySubject, throwError } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorHandlerService } from '../../services/error-handler.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  currentUser: User | undefined;
-  myInformationUser: UserDto | undefined;
-  roles: string | undefined;
+  isLoading: boolean = false;
+  CurrentUser: UserDto | undefined;
+  CurrentRole: string | undefined;
+  CurrentRoles: string[] | undefined;
   navigationPages: NavigationItem[] | undefined;
 
   jwtToken: JWTTokenModel | undefined;
@@ -34,13 +33,12 @@ export class AuthService {
     private signalRService: SignalrService,
     private mysubjectService: MySubjectService,
     private authClient: AuthClient,
-    private errorHandlerService: ErrorHandlerService
+    private errorHandlerService: ErrorHandlerService,
+    private router: Router,
 
-  ) { }
+  ) {
 
-
-
-
+  }
   signIn(signInDto: SignInDto): Observable<boolean> {
 
     if (this._authenticated) {
@@ -59,9 +57,9 @@ export class AuthService {
       catchError((err: any) => {
         this._authenticated = false;
         this._authenticated$.next(false);
-        
+
         this.errorHandlerService.handleError(err);
-        
+
         return of(false);
       })
     )
@@ -89,37 +87,33 @@ export class AuthService {
   }
 
 
-  signOut(): Observable<boolean> {
-    return this.authClient.signOut().pipe(map((isOutSide: boolean) => {
-      this._authenticated = isOutSide;
-      this._authenticated$.next(isOutSide);
-      sessionStorage.removeItem("accessToken");
-      sessionStorage.removeItem("refreshToken");
-      console.log("signOut");
+  signOut() {
 
-      return isOutSide;
-    })
-    );
-
+    sessionStorage.removeItem("accessToken");
+    sessionStorage.removeItem("refreshToken");
+    this._authenticated = false;
+    this._authenticated$.next(false);
+    // location.reload();
   }
 
 
 
+  Reload() {
+    console.log("reload");
 
-
-
-
-
+  }
 
 
   getRoles(): any {
-    switch (this.roles) {
+    switch (this.CurrentRole) {
       case 'admin':
         return Roles.Admin;
       case 'teacher':
         return Roles.Teacher;
       case 'student':
         return Roles.Student;
+      case 'user':
+        return Roles.User
     }
   }
 
@@ -128,8 +122,11 @@ export class AuthService {
 
     this.userClient.me().subscribe({
       next: (resp) => {
-        this.myInformationUser = resp;
-
+        this.CurrentUser = resp;
+        this.CurrentRole = resp.mainRole;
+        this.CurrentRoles = resp.roles;
+        this._authenticated = true;
+        this._authenticated$.next(true);
         this.mysubjectService.changeDetector?.markForCheck();
       },
     });
@@ -143,7 +140,7 @@ export class AuthService {
     // });
   }
   getPageForRole() {
-    switch (this.roles) {
+    switch (this.CurrentRole) {
       case 'admin':
         this.navigationPages = this.filterNavigationByRole(
           defaultNavigation,
@@ -163,6 +160,10 @@ export class AuthService {
         );
         break;
     }
+
+    this.accessUrlList = this.getUrlsForRole(this.navigationPages!);
+
+
   }
 
   filterNavigationByRole(

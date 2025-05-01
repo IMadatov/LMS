@@ -32,5 +32,4 @@ public class AuthContext(DbContextOptions options) : IdentityDbContext<Applicati
     }
 
     public DbSet<StatusUser> StatusUsers { get; set; }
-
 }

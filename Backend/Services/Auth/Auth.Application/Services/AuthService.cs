@@ -194,7 +194,7 @@ public class AuthService(
     public async Task<ServiceResult<bool>> SignOutAsync()
     {
         await signInManager.SignOutAsync();
-        var userId = httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+        var userId = httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
 
         if (userId is null)
             return ServiceResult.Ok(true);
@@ -458,4 +458,10 @@ public class AuthService(
         return principal;
     }
 
+
+    public async Task<List<ApplicationRole>> GetRoles()
+    {
+        var list =await _dbContext.Roles.ToListAsync();
+        return list;
+    }
 }

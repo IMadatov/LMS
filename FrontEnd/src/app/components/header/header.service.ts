@@ -26,14 +26,8 @@ export class HeaderService {
 
   LogOut() {
 
-    this.authService.signOut().subscribe({
-      next: (resp) => {
-        location.reload();
-      },
-      error: (err) => {
-        console.error(err);
-      },
-    });
+    this.authService.signOut();
+    location.reload();
   }
   
   

@@ -60,8 +60,8 @@ export class TranslocoTableService {
 
   }
   onRowEditInit(translocoItem:TranslocoDto){
-    // if(translocoItem.id!==undefined)
-    // this.cloneedProducts[translocoItem.id!] = { ...translocoItem };
+    if(translocoItem.id!==undefined)
+      this.cloneedProducts[translocoItem.id] = new TranslocoDto( translocoItem );
 
   }
   onRowEditSave(translocoItem:TranslocoDto){
@@ -69,6 +69,12 @@ export class TranslocoTableService {
     
     if(translocoItem.code?.length!=0){
       
+      this.translocoClient.insertOrUpdateWord(translocoItem).subscribe({
+        next:(value)=>{
+          this.GetTranslocoItems();
+          this.toastrService.success('Transloco item saved');
+        }
+      })
       // this.httpService.InsertWordTransloco(translocoItem).subscribe({
       //   next:(value)=>{
       //     this.GetTranslocoItems();
@@ -77,8 +83,8 @@ export class TranslocoTableService {
       //   }
       // })
     }
-    // this.translocoList?.pop();
-    // this.translocoList?.push({code:"",valueEN:"  ",valueKR:" ",valueRU:"  ",valueUZ:"  ",id:0});
+    this.translocoList?.pop();
+    this.translocoList?.push({code:"",valueEN:"  ",valueKR:" ",valueRU:"  ",valueUZ:"  ",id:0} as TranslocoDto);
     
     delete this.cloneedProducts[translocoItem.id!];
   }
@@ -93,6 +99,10 @@ export class TranslocoTableService {
   }
 
   onRowDelete(translocoItem:TranslocoDto){
+    this.translocoClient.deleteWord(translocoItem.id).subscribe(()=>{
+      this.GetTranslocoItems();
+      this.toastrService.show("Deleted")
+    });
     // this.httpService.DeleteWordTransloco(translocoItem).subscribe(()=>{
     //   this.GetTranslocoItems();
     //   this.toastrService.show("Deleted")

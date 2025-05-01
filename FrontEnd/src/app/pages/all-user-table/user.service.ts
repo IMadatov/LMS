@@ -4,8 +4,9 @@ import { ToastrService } from 'ngx-toastr';
 import { SelectorButtonModule } from '../../models/selector-button-module';
 import { PaginatedList } from '../../models/paginated-list';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { map, Observable, ReplaySubject, Subject, takeUntil } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
+import { AuthClient, UserClient, UserDto } from '../../nswag/nswag.auth';
 
 @Injectable(
   {
@@ -14,6 +15,32 @@ import { AuthService } from '../auth/auth.service';
 )
 export class UserService {
 
+  public _user$:ReplaySubject<UserDto>= new ReplaySubject<UserDto>(1);
+
+  private _user: UserDto | undefined;
+
+
+  public get user(): UserDto | undefined {
+    return this._user;
+  }
+
+  public set user(value: UserDto | undefined) {
+    this._user = value;
+    this._user$.next(value!);
+  }
+
+  public GetUser() :Observable<UserDto> {
+    return this.userClient.me().pipe(
+      map((x)=>{
+        this.user = x;
+        this._user$.next(x);
+        return x;
+      })
+    );
+  }
+
+
+  
   public isAdmin:boolean=false;
 
   public users: User[] | undefined;
@@ -40,7 +67,8 @@ export class UserService {
     private authService:AuthService,
     private toastr: ToastrService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private userClient:UserClient
   ) {}
 
  

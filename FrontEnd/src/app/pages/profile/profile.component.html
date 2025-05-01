@@ -3,14 +3,14 @@
     <div class="px-4 py-5 sm:px-6 flex justify-between">
       <div>
         <h3 class="text-lg leading-6  text-gray-900 dark:text-gray-200 font-bold">
-          {{ (profileService.userData?.roles?.at(0) | uppercase) ?? "USER" }}
+          {{ (authService.CurrentUser?.roles?.at(0) | uppercase) ?? "USER" }}
         </h3>
         <p class="mt-1 max-w-2xl text-sm text-gray-500">
           {{'profile.details.and.informations.about.Key'|transloco}}
-          {{ profileService.userData?.roles?.at(0) ?? "user" }}.
+          {{ authService.CurrentUser?.roles?.at(0) ?? "user" }}.
         </p>
         <p>
-          @if (profileService.userData?.active) {
+          @if (authService.CurrentUser?.active) {
             <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-green-900 dark:text-green-300">{{'activeKey'|transloco}}</span>
           }
           @else {
@@ -19,9 +19,9 @@
         </p>
       </div>
       <div>
-        <ng-container *ngIf="profileService.userData?.statusUser?.hasPhotoProfile; else defaultAvatarIcon">
+        <ng-container *ngIf="authService.CurrentUser?.statusUser?.hasPhotoProfile; else defaultAvatarIcon">
           <img
-          [src]="profileService.userData?.photoUrl"
+          [src]="authService.CurrentUser?.photoUrl"
           width="100"
           style="vertical-align: middle; border-radius: 50%"
         />
@@ -36,13 +36,13 @@
     </div>
     <div class="p-5 pt-0">
         <button type='button'
-        (click)="profileService.Reload()"
+        (click)="authService.Reload()"
         style="background-color:  rgb(20, 20, 70);"
       class='py-2.5 pl-4 group pr-3.5 text-sm  text-white rounded-full cursor-pointer font-semibold text-center shadow-2xs transition-all duration-500 flex gap-2 items-center hover:bg-indigo-700'>
       {{'refreshKey'|transloco}}
       <svg class="transition-all duration-700 "
       
-        [ngClass]="{'animate-spin':profileService.loading}"
+        [ngClass]="{'animate-spin':authService.isLoading}"
         xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
         fill="none">
         <path
@@ -61,13 +61,13 @@
         >
           <dt class="text-sm font-medium text-gray-500">{{'firstnameKey'|transloco}}</dt>
           <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
-            {{ profileService.userData?.firstName }}
+            {{ authService.CurrentUser?.firstName }}
           </dd>
         </div>
         <div class="bg-white dark:bg-gray-900 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
           <dt class="text-sm font-medium text-gray-500">{{'lastnameKey'|transloco}}</dt>
           <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
-            {{ profileService.userData?.lastName }}
+            {{ authService.CurrentUser?.lastName }}
           </dd>
         </div>
         <div
@@ -75,13 +75,13 @@
         >
           <dt class="text-sm font-medium text-gray-500">{{'emailKey'|transloco}}</dt>
           <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
-            {{ profileService.userData?.email }}
+            {{ authService.CurrentUser?.email }}
           </dd>
         </div>
         <div class="bg-white  dark:bg-gray-900 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
           <dt class="text-sm font-medium text-gray-500">{{'usernameKey'|transloco}}</dt>
           <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
-            {{ profileService.userData?.userName }}
+            {{ authService.CurrentUser?.userName }}
           </dd>
         </div>
         <div
@@ -91,16 +91,16 @@
           <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
             <a
               href="https://t.me/{{
-                profileService.userData?.telegramUserName
+                authService.CurrentUser?.telegramUserName
               }}"
-              >{{ profileService.userData?.telegramUserName }}</a
+              >{{ authService.CurrentUser?.telegramUserName }}</a
             >
           </dd>
         </div>
         <div class="bg-white  dark:bg-gray-900 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
           <dt class="text-sm font-medium text-gray-500">{{'telegram.Id.Key'|transloco}}</dt>
           <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
-            {{ profileService.userData?.telegramId }}
+            {{ authService.CurrentUser?.telegramId }}
           </dd>
         </div>
         <div
@@ -108,7 +108,7 @@
         >
           <dt class="text-sm font-medium text-gray-500">{{'date.create.account.Key'|transloco}}</dt>
           <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
-            {{ profileService.userData?.createdDate | date : "short" }}
+            {{ authService.CurrentUser?.createdDate | date : "short" }}
           </dd>
         </div>
         <div class="bg-white  dark:bg-gray-900 pb-2 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">

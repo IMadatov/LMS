@@ -40,6 +40,15 @@
   </ItemGroup>
 
 	<Target Name="NSwag" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Debug'">
-		<Exec WorkingDirectory="$(ProjectDir)" EnvironmentVariables="ASPNETCORE_ENVIRONMENT=Development" Command="dotnet %userprofile%/.nuget\packages\nswag.msbuild\14.2.0\tools\Net80/dotnet-nswag.dll run nswag.front.json /variables:Configuration=$(Configuration)" />
+		<Exec 
+			WorkingDirectory="$(ProjectDir)" 
+			EnvironmentVariables="ASPNETCORE_ENVIRONMENT=Development;NSWAG_BUILD=true" 
+			Command="$(NSwagExe_Net80)  run nswag.front.json /variables:Configuration=$(Configuration)" />
+	</Target>
+	<Target Name="NSwag2" AfterTargets="NSwag" Condition="'$(Configuration)' == 'Debug'">
+		<Exec 
+			WorkingDirectory="$(ProjectDir)" 
+			EnvironmentVariables="ASPNETCORE_ENVIRONMENT=Development;NSWAG_BUILD=true" 
+			Command="$(NSwagExe_Net80)  run nswag.microservice.json /variables:Configuration=$(Configuration)" />
 	</Target>
 </Project>

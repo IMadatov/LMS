@@ -10,6 +10,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../auth.service';
 import { SignInDto } from '../../../../nswag/nswag.auth';
+import { Router } from '@angular/router';
 
 export const reg = RegExp(
   /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/
@@ -27,7 +28,8 @@ export class LoginComponent {
 
   constructor(
     public registerService: RegisterService,
-    private authService:AuthService
+    private authService:AuthService,
+    private router:Router
   ) { }
 
   public userLogin = new FormGroup({

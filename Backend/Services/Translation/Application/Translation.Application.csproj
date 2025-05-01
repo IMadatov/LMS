@@ -10,11 +10,13 @@
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Utils\BaseCrud\BaseCrud.EntityFrameworkCore\BaseCrud.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\..\..\Utils\Clients\Clients.csproj" />
+    <ProjectReference Include="..\..\..\Utils\General\General.csproj" />
     <ProjectReference Include="..\Domain\Translation.Domain.csproj" />
     <ProjectReference Include="..\GTranslate\GTranslate.csproj" />
     <ProjectReference Include="..\Infrastructure\Translation.Infrastructure.csproj" />

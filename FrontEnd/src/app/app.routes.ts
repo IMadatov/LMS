@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { RegisterComponent } from './pages/auth/register/register.component';
 import { HomeComponent } from './pages/home/home.component';
-import { authGuard, noAuthGuard } from './guards/auth.guard';
+// import { authGuard, noAuthGuard } from './guards/auth.guard';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
@@ -10,6 +10,7 @@ import { AdminComponent } from './pages/admin/admin.component';
 import { ServererrorComponent } from './components/servererror/servererror.component';
 import { MySubjectComponent } from './pages/my-subject/my-subject.component';
 import { TranslocoComponent } from './pages/admin/transloco/transloco.component';
+import { authGuard, noAuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -97,8 +98,7 @@ export const routes: Routes = [
   },
   {
     path:'server-error',
-    component:ServererrorComponent,
-    canActivate:[]
+    component:ServererrorComponent
   },
   {
     path: '**',

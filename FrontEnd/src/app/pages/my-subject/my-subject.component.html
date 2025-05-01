@@ -47,7 +47,7 @@
             </ng-template>
             <ng-template pTemplate="body" let-product as Subject>
               <tr>
-                <td class="pr-1">@if (authService.currentUser?.id==product.createdBy){<p-tableCheckbox [value]="product" />}</td>
+                <td class="pr-1">@if (authService.CurrentUser?.id==product.createdBy){<p-tableCheckbox [value]="product" />}</td>
                 <td>{{ mysubjectService.first + product.indexOfItem}}</td>
                 <td>{{ product.name }}</td>
                 <td>{{ product.craetedDate | date : "short" }}</td>

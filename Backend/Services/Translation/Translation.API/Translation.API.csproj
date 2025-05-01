@@ -37,3 +37,4 @@
 		<Exec WorkingDirectory="$(ProjectDir)" EnvironmentVariables="ASPNETCORE_ENVIRONMENT=Development" Command="dotnet %userprofile%/.nuget\packages\nswag.msbuild\14.2.0\tools\Net80/dotnet-nswag.dll run nswag.front.json /variables:Configuration=$(Configuration)" />
 	</Target>
 </Project>
+ 

@@ -6,6 +6,7 @@ import { AuthService } from '../auth/auth.service';
 import { TranslationService } from '../../services/translation.service';
 import { TranslocoService } from '@jsverse/transloco';
 import { Subscription, take } from 'rxjs';
+import { UserService } from '../all-user-table/user.service';
 
 @Component({
     selector: 'app-home',
@@ -17,7 +18,6 @@ export class HomeComponent implements OnInit {
 
 
   constructor(
-    private authService: AuthService,
     private translationService: TranslationService
   ) {
 
@@ -25,8 +25,6 @@ export class HomeComponent implements OnInit {
 
 
   ngOnInit() {
-    this.authService.getCurrentUser();
-
     this.translationService.GetCurrentLanguage();
 
     // this.subscribtion= this.translocoService.load(this.translationService.currentLanguage?.code||"en").pipe(take(1)).subscribe(()=>{

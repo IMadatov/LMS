@@ -31,4 +31,5 @@ public class UserController(IUserService userService):BaseController
     public async Task<ActionResult<LanguageDto?>> ChangeMyLanguage(string lang) =>
         await FromServiceResult(userService.ChangeLanguage(lang, UserProfile));
 
+    
 }

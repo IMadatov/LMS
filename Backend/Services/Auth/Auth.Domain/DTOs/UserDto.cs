@@ -44,5 +44,7 @@ namespace Auth.Domain.DTOs
         public StatusUserDto? StatusUser { get; set; }
 
         public IList<string> Roles { get; set; } = [];
+        public string? MainRole { get; set; }
+
     }
 }

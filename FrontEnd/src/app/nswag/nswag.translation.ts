@@ -13,13 +13,13 @@ import { Observable, throwError as _observableThrow, of as _observableOf } from 
 import { Injectable, Inject, Optional, InjectionToken } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angular/common/http';
 
-export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
+export const API_BASE_URL_TRANSLATION = new InjectionToken<string>('API_BASE_URL_TRANSLATION');
 
 export interface ITranslocoClient {
     getTranslations(data: PrimeTableMetaData): Observable<QueryResultOfTranslocoDto>;
     insertOrUpdateWord(translocoDto: TranslocoDto): Observable<TranslocoDto>;
     insertAuto(translocoDtos: TranslocoDto[]): Observable<boolean>;
-    currentLanguage(lang: string | undefined): Observable<string>;
+    currentLanguage(): Observable<{ [key: string]: string; }>;
     deleteWord(id: number | undefined): Observable<boolean>;
     translate(textUz: string | undefined): Observable<string>;
 }
@@ -32,7 +32,7 @@ export class TranslocoClient implements ITranslocoClient {
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL_TRANSLATION) baseUrl?: string) {
         this.http = http;
         this.baseUrl = baseUrl ?? "";
     }
@@ -194,12 +194,8 @@ export class TranslocoClient implements ITranslocoClient {
         return _observableOf(null as any);
     }
 
-    currentLanguage(lang: string | undefined): Observable<string> {
-        let url_ = this.baseUrl + "/api/translation/Transloco/CurrentLanguage?";
-        if (lang === null)
-            throw new Error("The parameter 'lang' cannot be null.");
-        else if (lang !== undefined)
-            url_ += "lang=" + encodeURIComponent("" + lang) + "&";
+    currentLanguage(): Observable<{ [key: string]: string; }> {
+        let url_ = this.baseUrl + "/api/translation/Transloco/CurrentLanguage";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -217,14 +213,14 @@ export class TranslocoClient implements ITranslocoClient {
                 try {
                     return this.processCurrentLanguage(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<string>;
+                    return _observableThrow(e) as any as Observable<{ [key: string]: string; }>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<string>;
+                return _observableThrow(response_) as any as Observable<{ [key: string]: string; }>;
         }));
     }
 
-    protected processCurrentLanguage(response: HttpResponseBase): Observable<string> {
+    protected processCurrentLanguage(response: HttpResponseBase): Observable<{ [key: string]: string; }> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -235,8 +231,16 @@ export class TranslocoClient implements ITranslocoClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 !== undefined ? resultData200 : <any>null;
-    
+            if (resultData200) {
+                result200 = {} as any;
+                for (let key in resultData200) {
+                    if (resultData200.hasOwnProperty(key))
+                        (<any>result200)![key] = resultData200[key] !== undefined ? resultData200[key] : <any>null;
+                }
+            }
+            else {
+                result200 = <any>null;
+            }
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -403,7 +407,7 @@ export interface IQueryResultOfTranslocoDto {
 }
 
 export class TranslocoDto implements ITranslocoDto {
-    id?: number | undefined;
+    id?: number;
     code?: string | undefined;
     valueUZ?: string | undefined;
     valueRU?: string | undefined;
@@ -450,7 +454,7 @@ export class TranslocoDto implements ITranslocoDto {
 }
 
 export interface ITranslocoDto {
-    id?: number | undefined;
+    id?: number;
     code?: string | undefined;
     valueUZ?: string | undefined;
     valueRU?: string | undefined;

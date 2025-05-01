@@ -66,7 +66,7 @@
           @if (user.roles!=null){ {{ user.roles.at(0) |uppercase}}}
         </td>
         <td>{{ user.createdAt |date :'hh:mm, d-MMM-y'}}</td>
-        <td *ngIf="authService.currentUser?.roles?.at(0)?.toLocaleLowerCase()=='admin'">  
+        <td *ngIf="authService.CurrentUser?.roles?.at(0)?.toLocaleLowerCase()=='admin'">  
           <p-button
             (onClick)="showDialog(user)"
             label="Info"

@@ -1,5 +1,4 @@
-﻿using BaseCrud.Abstractions;
-using BaseCrud.PrimeNg;
+﻿using BaseCrud.PrimeNg;
 using Clients;
 using Clients.TelegramBot.Client;
 using General;
@@ -10,7 +9,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
+using Serilog;
+using Serilog.Events;
+using Serilog.Exceptions;
+using Serilog.Exceptions.Core;
+using Serilog.Exceptions.Destructurers;
+using Serilog.Exceptions.EntityFrameworkCore.Destructurers;
+using Serilog.Exceptions.SqlServer.Destructurers;
 using System.Text;
 using Web.API.Extensions.Converters;
 
@@ -18,13 +23,62 @@ namespace Web.API;
 
 public static class MainConfigureServices
 {
+    public static void ConfigureSerilog(LoggerConfiguration loggerConfiguration, IConfiguration configuration)
+    {
+        loggerConfiguration
+            .ReadFrom.Configuration(configuration)
+            .MinimumLevel.Override("Microsoft.AspNetCore.Hosting", LogEventLevel.Warning)
+            .MinimumLevel.Override("Microsoft.AspNetCore.Mvc", LogEventLevel.Warning)
+            .MinimumLevel.Override("Microsoft.AspNetCore.Routing", LogEventLevel.Warning)
+            .Enrich.WithExceptionDetails(
+                destructuringOptions: new DestructuringOptionsBuilder()
+                    .WithDefaultDestructurers()
+                    .WithDestructurers(new IExceptionDestructurer[]
+                    {
+                            new SqlExceptionDestructurer(),
+                            new DbUpdateExceptionDestructurer()
+                    })
+            );
+    }
+
+    public static void ConfigureBootstrapSerilog()
+    {
+       var eds= Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+        IConfigurationRoot serilogConfiguration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile(
+            path: $"serilog.{"Release"}.json")
+            .Build();
+            //.AddEnvironmentVariables()
+
+        var jsonFile = serilogConfiguration["Serilog:MinimumLevel:Default"];
+
+        var texts = File.ReadAllLines(jsonFile);
+
+        if (texts.Length > 0)
+        {
+            foreach (var text in texts)
+            {
+                Console.WriteLine(text);
+            }
+        }
+
+        Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(serilogConfiguration)
+            .CreateBootstrapLogger();
+    }
     public static IServiceCollection AddMainConfigureServices(
         this IServiceCollection services,
         IConfiguration configuration
         )
     {
         //serilog https://github.com/serilog/serilog/wiki/Configuration-Basics
-
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+            .Enrich.FromLogContext()
+            .WriteTo.File($"Logs/mylog-{DateTime.Now:yyyy-MM-dd}.txt")
+            .CreateLogger();
 
         // Adding Authentication  
         //services.AddAuthentication()
@@ -45,7 +99,7 @@ public static class MainConfigureServices
         //            opt.Cookie.SameSite = SameSiteMode.None;
         //            opt.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         //        });
-
+        
 
         var jwtSettings = configuration.GetSection("JwtSettings");
 
@@ -153,8 +207,8 @@ public static class MainConfigureServices
     {
         if (app.Environment.IsDevelopment())
         {
-            app.UseOpenApi();
-            //app.UseSwagger();
+            //app.UseOpenApi();
+            app.UseSwagger();
             app.UseSwaggerUI();
 
         }

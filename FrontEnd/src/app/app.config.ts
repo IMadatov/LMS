@@ -18,6 +18,7 @@ import primengTheme from './primengTheme';
 import { API_BASE_URL } from './nswag/nswag.auth';
 import { environment } from '../environments/environment';
 import { jwtTokenInterceptor } from './interceptors/jwt-token.interceptor';
+import { API_BASE_URL_TRANSLATION } from './nswag/nswag.translation';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
@@ -37,8 +38,8 @@ export const appConfig: ApplicationConfig = {
         reRenderOnLangChange: true,
         prodMode: !isDevMode(),
         missingHandler:{
-          allowEmpty:true
-          
+          logMissingKey:true,
+          useFallbackTranslation:true
         }
       },
       loader: TranslocoHttpLoader,
@@ -56,7 +57,10 @@ export const appConfig: ApplicationConfig = {
       provide: API_BASE_URL,
       useValue: environment.API_BASE_URL,
     },
-    
+    {
+      provide:API_BASE_URL_TRANSLATION,
+      useValue:environment.API_BASE_URL
+    }
  
   ],
 };

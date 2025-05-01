@@ -2,9 +2,11 @@
 using BaseCrud.Abstractions.Entities;
 using BaseCrud.EntityFrameworkCore;
 using BaseCrud.ServiceResults;
+using Clients.Auth.Client;
 using Domain.Interfaces.Services;
 using Domain.ModelDtos;
 using Domain.Models;
+using General.Enums;
 using Infrastructure.DbContextOptions;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
@@ -13,37 +15,44 @@ namespace Application.Services;
 
 public class TranslocoService(
     TranslationDbContext dbContext, 
-    IMapper mapper) 
+    IMapper mapper,
+    UserClient userClient
+    ) 
     : BaseCrudService<Transloco, TranslocoDto, TranslocoDto,Guid>(dbContext, mapper),
     ITranslocoService
 {
-    public async Task<string> CurrentLanguage(string lang)
+    public async Task<Dictionary<string, string>> CurrentLanguage(string lang)
     {
-        var json = new JObject();
 
         var dataDb =await dbContext.Translations.ToListAsync();
 
+        var translations = new Dictionary<string, string>();
+
+        
         dataDb.ForEach(dd =>
         {
+
+
             switch (lang)
             {
-                case "uz":
-                    json[dd.Code] = dd.ValueUZ;
+                case "UZBEK":
+                    translations.Add(dd.Code,dd.ValueUZ);
                     break;
-                case "kr":
-                    json[dd.Code] = dd.ValueKR;
+                case "KARAKALPAK":
+
+                    translations.Add(dd.Code, dd.ValueKR);
                     break;
-                case "ru":
-                    json[dd.Code] = dd.ValueRU;
+                case "RUSSIAN":
+                    translations.Add(dd.Code, dd.ValueRU);
                     break;
 
                 default:
-                    json[dd.Code] = dd.ValueEN;
+                    translations.Add(dd.Code, dd.ValueEN);
                     break;
             }
         });
 
-        return json.ToString();
+        return translations;
 
     }
 
@@ -96,14 +105,19 @@ public class TranslocoService(
         return CurrentLanguage;
     }
 
-    public async Task<ServiceResult<bool>> InsertAutoTranslation(List<TranslocoDto> translocoDtos)
+    public async Task<ServiceResult<bool>?> InsertAutoTranslation(List<TranslocoDto> translocoDtos)
     {
         var translocos=Mapper.Map<List<Transloco>>(translocoDtos);
 
-        DbContext.AddRange(translocos);
+        var translocosNew = from tr in translocos where dbContext.Translations.Any(t => t.Code != tr.Code) select tr;
 
-        await DbContext.SaveChangesAsync();
+        dbContext.Translations.AddRange(translocosNew);    
 
+        dbContext.SaveChanges();
+
+        
         return ServiceResult.Ok(true);
     }
+
+
 }

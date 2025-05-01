@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SpinnerComponent } from "./pages/spinner/spinner.component";
 import { ThemeService } from './services/theme.service';
-import { TranslocoCustomMissingHandler } from './custom-missing-handler';
+import { AuthService } from './pages/auth/auth.service';
 @Component({
     selector: 'app-root',
     imports: [
@@ -16,14 +16,16 @@ import { TranslocoCustomMissingHandler } from './custom-missing-handler';
 export class AppComponent implements OnInit {
   constructor(
     private themeService: ThemeService,
+    private authService:AuthService
     ) {
  
   }
 
   ngOnInit(): void {
+    this.authService.getCurrentUser();
     this.themeService.loadTheme();
   }
 
 
-  title = 'Application';
+  title = 'LMS-Angular';
 }

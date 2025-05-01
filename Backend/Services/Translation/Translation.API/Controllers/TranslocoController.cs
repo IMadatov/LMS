@@ -6,6 +6,7 @@ using Domain.ModelDtos;
 using GTranslate.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Translation.API.Controllers;
 
@@ -30,9 +31,13 @@ public class TranslocoController(ITranslocoService translocoService,IGTranslateS
         await FromServiceResult(translocoService.InsertAutoTranslation(translocoDtos));
 
     [HttpPost]
-    [AllowAnonymous]
-    public async Task<ActionResult<string>> CurrentLanguage(string lang) =>
-        await translocoService.CurrentLanguage(lang);
+   
+    public async Task<ActionResult<Dictionary<string,string>>> CurrentLanguage()
+    {
+        string lang= User.Claims.First(c => c.Type == ClaimTypes.Country).Value;
+
+        return await translocoService.CurrentLanguage(lang);
+    }
 
 
     [HttpDelete]

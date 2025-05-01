@@ -11,7 +11,7 @@ public interface ITranslocoService:ICrudService<Transloco,TranslocoDto,Transloco
 
     Task<List<KeyValuePair<string, string>>> GetTranslationsAsync(string lang);
 
-    Task<string> CurrentLanguage(string lang);
+    Task<Dictionary<string,string>> CurrentLanguage(string lang);
     Task<bool> DeleteAsync(int id, IUserProfile<Guid>? userProfile);
     Task<ServiceResult<bool>> InsertAutoTranslation(List<TranslocoDto> translocoDtos);
 }

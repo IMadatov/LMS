@@ -1,7 +1,6 @@
 ﻿using BaseCrud.ServiceResults;
 using Auth.Domain.Entities;
 using Auth.Domain.DTOs;
-using General.DTOs;
 
 
 namespace Auth.Application.Services;
@@ -30,4 +29,6 @@ public interface IAuthService
 
     //Change Role
     Task<ServiceResult<JWTTokenModel>> ChangeMainRole(string UserId,string ToRole);
+
+    Task<List<ApplicationRole>> GetRoles();
 }

@@ -1,6 +1,6 @@
 <p-drawer [(visible)]="headerService.isActiveSideBarBool" header="LMS">
     <div class="gap-3 w-full  flex flex-col items-center">
-        <div class="m-4">{{authService.roles|uppercase}}</div>
+        <div class="m-4">{{authService.CurrentRole|uppercase}}</div>
         <div class="card w-full flex flex-col  items-center">
             <p-panelmenu [model]="items" styleClass="w-full md:w-68" class="w-full">
                 <ng-template #item let-item>

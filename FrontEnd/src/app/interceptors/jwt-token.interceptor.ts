@@ -1,28 +1,30 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs';
+import { catchError, tap, throwError } from 'rxjs';
+import { AuthService } from '../pages/auth/auth.service';
 
 export const jwtTokenInterceptor: HttpInterceptorFn = (req, next) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
 
-  const router=inject(Router);
-  if(req.url.includes('auth/register')){
-    return next(req);
-  }
-
-  req=req.clone({
-    setHeaders:{
-      Authorization:"Bearer "+sessionStorage.getItem("accessToken")}
+  req = req.clone({
+    setHeaders: {
+      Authorization: "Bearer " + sessionStorage.getItem("accessToken")
+    }
   })
 
-  return next(req).pipe(tap((res)=>{
-    if(res instanceof HttpErrorResponse){
-      if(res.status==401){
-        router.navigate(["auth/register"]);
-      }
-    }
-   },
-   )
-);
-  
+  return next(req).pipe(
+    
+    catchError((err:HttpErrorResponse)=>{
+      
+      if(err.status==401){
+        router.navigateByUrl("/auth/register")
+        authService.signOut();
+      }        
+      return throwError(()=>err);
+    })
+    )
+
+
 };
