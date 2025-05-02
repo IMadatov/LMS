@@ -42,7 +42,7 @@
     {
       "Name": "File",
       "Args": {
-        "path": "C:\\API Logs\\PiimaIdentity_Prod\\log-.txt",
+        "path": "C:\\API Logs\\LMS\\Backend\\Auth_Prod\\log-.txt",
         "rollingInterval": "Day",
         "shared": true,
         "rollOnFileSizeLimit": true,

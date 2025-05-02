@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json.schemastore.org/appsettings",
+  "Serilog": {
+    "MinimumLevel": {
+      "Default": "Information",
+      "Override": {
+        "Microsoft": "Warning",
+        "System": "Warning",
+        "Microsoft.AspNetCore.Mvc": "Warning",
+        "Microsoft.AspNetCore.Routing": "Warning",
+        "Microsoft.AspNetCore.Hosting.Diagnostics": "Warning",
+        "Microsoft.AspNetCore.Hosting": "Warning",
+        "Microsoft.AspNetCore.HttpLogging": "Warning"
+      }
+    },
+    "Using": [ "Serilog.Exceptions", "Serilog.Enrichers.ClientInfo" ],
+    "Enrich": [
+      "FromLogContext",
+      "WithExceptionDetails",
+      "WithProcessId",
+      "WithProcessName",
+      "WithMachineName",
+      "WithThreadId",
+      "WithCorrelationId"
+    ]
+  },
+  "WriteTo": [
+    {
+      "Name": "Console",
+      "Args": {
+        "outputTemplate": "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}"
+      }
+    },
+    //{
+    //  "Name": "Telegram",
+    //  "Args": {
+    //    "botToken": "7893439887:AAE-00IQt_8mlP1-ahohyaA1ZESAbpiqVIc",
+    //    "chatIds": [ "1255684782" ],
+    //    "restrictedToMinimumLevel": "Error"
+    //  }
+    //},
+    {
+      "Name": "File",
+      "Args": {
+        "path": "C:\\API Logs\\LMS\\Backend\\Translation_Prod\\log-.txt",
+        "rollingInterval": "Day",
+        "shared": true,
+        "rollOnFileSizeLimit": true,
+        "fileSizeLimitBytes": 104857600
+      }
+    }
+    //{
+    //  "Name": "Seq",
+    //  "Args": {
+    //    "serverUrl": "http://192.168.10.62:5341"
+    //  }
+    //}
+  ],
+  "Enrich": [
+    "FromLogContext",
+    "WithExceptionDetails",
+    "WithProcessId",
+    "WithProcessName",
+    "WithMachineName",
+    "WithThreadId",
+    "WithCorrelationId",
+    {
+      "Name": "WithRequestHeader",
+      "Args": {
+        "headerName": "X-Forwarded-For"
+      }
+    },
+    {
+      "Name": "WithRequestHeader",
+      "Args": {
+        "headerName": "X-Real-IP"
+      }
+    }
+  ],
+  "Properties": {
+    "Application": "Translation.API"
+  }
+}

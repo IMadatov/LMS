@@ -48,21 +48,10 @@ public static class MainConfigureServices
         IConfigurationRoot serilogConfiguration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile(
-            path: $"serilog.{"Release"}.json")
+            path: $"serilog.{eds??"Release"}.json")
+            .AddEnvironmentVariables()
             .Build();
-            //.AddEnvironmentVariables()
 
-        var jsonFile = serilogConfiguration["Serilog:MinimumLevel:Default"];
-
-        var texts = File.ReadAllLines(jsonFile);
-
-        if (texts.Length > 0)
-        {
-            foreach (var text in texts)
-            {
-                Console.WriteLine(text);
-            }
-        }
 
         Log.Logger = new LoggerConfiguration()
             .ReadFrom.Configuration(serilogConfiguration)

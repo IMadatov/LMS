@@ -24,6 +24,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Serilog.Enrichers.ClientInfo" Version="2.1.2" />
+    <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,15 +42,15 @@
   </ItemGroup>
 
 	<Target Name="NSwag" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Debug'">
-		<Exec 
-			WorkingDirectory="$(ProjectDir)" 
-			EnvironmentVariables="ASPNETCORE_ENVIRONMENT=Development;NSWAG_BUILD=true" 
+		<Exec
+			WorkingDirectory="$(ProjectDir)"
+			EnvironmentVariables="ASPNETCORE_ENVIRONMENT=Development;NSWAG_BUILD=true"
 			Command="$(NSwagExe_Net80)  run nswag.front.json /variables:Configuration=$(Configuration)" />
 	</Target>
 	<Target Name="NSwag2" AfterTargets="NSwag" Condition="'$(Configuration)' == 'Debug'">
-		<Exec 
-			WorkingDirectory="$(ProjectDir)" 
-			EnvironmentVariables="ASPNETCORE_ENVIRONMENT=Development;NSWAG_BUILD=true" 
+		<Exec
+			WorkingDirectory="$(ProjectDir)"
+			EnvironmentVariables="ASPNETCORE_ENVIRONMENT=Development;NSWAG_BUILD=true"
 			Command="$(NSwagExe_Net80)  run nswag.microservice.json /variables:Configuration=$(Configuration)" />
 	</Target>
 </Project>

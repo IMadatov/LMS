@@ -17,7 +17,7 @@ public static class ApplicationServiceRegistration
         {
             opt.CreateMap<Transloco,TranslocoDto>().ReverseMap(); 
         });
-        services.AddScoped<ITranslocoService, TranslocoService>();
+        //services.AddScoped<ITranslocoService, TranslocoService>();
         services.AddScoped<IGTranslateService, GTranslateService>(); 
         return services;
     }

@@ -46,7 +46,7 @@ void ConfigureServices(WebApplicationBuilder builder)
         optional: true,
         reloadOnChange: true);
 
-    //builder.Host.UseSerilog();
+    builder.Host.UseSerilog();
 
 
     // Add services to the container.
