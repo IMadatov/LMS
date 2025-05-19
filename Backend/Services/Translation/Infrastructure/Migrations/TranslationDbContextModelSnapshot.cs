@@ -70,7 +70,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("Code")
                         .IsUnique();
 
-                    b.ToTable("Translations");
+                    b.ToTable("Translations", (string)null);
                 });
 #pragma warning restore 612, 618
         }

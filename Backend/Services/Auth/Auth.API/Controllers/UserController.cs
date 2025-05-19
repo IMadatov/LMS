@@ -4,6 +4,7 @@ using BaseCrud.Abstractions.Entities;
 using BaseCrud.Entities;
 using BaseCrud.PrimeNg;
 using General.DTOs;
+using General.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -15,7 +16,7 @@ public class UserController(IUserService userService):BaseController
 {
     [HttpGet]
     public async Task<ActionResult<UserDto?>> Me()
-    =>await FromServiceResult(userService.GetByIdAsync(UserProfile.Id, UserProfile));
+    =>await FromServiceResult(userService.Me(UserProfile));
 
     [HttpPost]
     public async Task<ActionResult<QueryResult<UserDto>?>> GetAll(PrimeTableMetaData dataTableMetaData)
@@ -28,8 +29,8 @@ public class UserController(IUserService userService):BaseController
         await FromServiceResult(userService.UserLanguage(UserProfile));
 
     [HttpPost]
-    public async Task<ActionResult<LanguageDto?>> ChangeMyLanguage(string lang) =>
-        await FromServiceResult(userService.ChangeLanguage(lang, UserProfile));
+    public async Task<ActionResult<LanguageDto?>> ChangeMyLanguage(Languages language) =>
+        await FromServiceResult(userService.ChangeLanguage(language, UserProfile));
 
     
 }

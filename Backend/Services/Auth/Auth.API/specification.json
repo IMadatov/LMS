@@ -394,10 +394,10 @@
         "operationId": "User_ChangeMyLanguage",
         "parameters": [
           {
-            "name": "lang",
+            "name": "language",
             "in": "query",
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/Languages"
             },
             "x-position": 1
           }

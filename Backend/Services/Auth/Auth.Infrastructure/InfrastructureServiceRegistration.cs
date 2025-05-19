@@ -15,7 +15,7 @@ public static class InfrastructureServiceRegistration
     {
         services.AddDbContext<AuthContext>(options =>
             options.UseSqlServer(
-                configuration.GetConnectionString("AuthConnection"),
+                configuration.GetConnectionString("IdentityConnectionString"),
                 builder =>
                 {
                     builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(5), null);

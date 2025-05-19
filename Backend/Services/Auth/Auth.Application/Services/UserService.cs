@@ -9,7 +9,9 @@ using BaseCrud.Errors;
 using BaseCrud.ServiceResults;
 using General.DTOs;
 using General.Enums;
+using General.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Auth.Application.Services;
 
@@ -23,19 +25,29 @@ public class UserService(
 {
 
 
-    public async Task<ServiceResult<LanguageDto>> ChangeLanguage(string lang, IUserProfile<Guid> userProfile)
+    public async Task<ServiceResult<UserDto>> Me(UserProfile userProfile)
+    {
+        var meObj = await authContext.Users.FirstOrDefaultAsync(x => x.Id == userProfile.Id); 
+
+        if (meObj is null)
+        {
+            return ServiceResult.NotFound(new ServiceError("User not found","user-not-found"));
+        }
+        var me = Mapper.Map<UserDto>(meObj);
+
+        me.Roles = await userManager.GetRolesAsync(meObj);
+
+
+        return ServiceResult.Ok(me);
+    }
+
+    public async Task<ServiceResult<LanguageDto>> ChangeLanguage(Languages lang, IUserProfile<Guid> userProfile)
     {
         var userId = userProfile.Id;
 
         var user = await userManager.FindByIdAsync(userId.ToString());
 
-        user.Language = lang switch
-        {
-            "uz" => Languages.UZBEK,
-            "ru" => Languages.RUSSIAN,
-            "kr" => Languages.KARAKALPAK,
-            _ => Languages.ENGLISH
-        };
+        user.Language = lang;
 
         await userManager.UpdateAsync(user);
 

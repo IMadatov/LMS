@@ -36,16 +36,11 @@ namespace Auth.Infrastructure.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<Guid?>("NavigationItemId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("NormalizedName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("NavigationItemId");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
@@ -53,6 +48,36 @@ namespace Auth.Infrastructure.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("f8a8d71c-1d62-4697-a4cb-989df1d76866"),
+                            ConcurrencyStamp = "25de8d7f-c72b-410d-a68a-9d8b9d81745c",
+                            Name = "ADMIN",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = new Guid("24da146e-0354-43bd-9e2a-dac1bf5c04fe"),
+                            ConcurrencyStamp = "36fda167-d956-4215-8ca6-8845d07fbc0c",
+                            Name = "USER",
+                            NormalizedName = "USER"
+                        },
+                        new
+                        {
+                            Id = new Guid("8bc0903b-5f78-4723-a492-a2a825ae44f7"),
+                            ConcurrencyStamp = "67a174e8-a980-41f1-a60b-bd1be92cdbaf",
+                            Name = "STUDENT",
+                            NormalizedName = "STUDENT"
+                        },
+                        new
+                        {
+                            Id = new Guid("812c4430-2c72-49e7-8569-7abb5b2adf76"),
+                            ConcurrencyStamp = "29720bdb-64f1-4aaf-b019-a938eaf9346f",
+                            Name = "TEACHER",
+                            NormalizedName = "TEACHER"
+                        });
                 });
 
             modelBuilder.Entity("Auth.Domain.Entities.ApplicationUser", b =>
@@ -171,49 +196,80 @@ namespace Auth.Infrastructure.Migrations
                         .HasFilter("TelegramId is not null");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
 
-            modelBuilder.Entity("Auth.Domain.Entities.NavigationItem", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Commmand")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("Hidden")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Icon")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Label")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("NavigationItemId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NavigationItemId");
-
-                    b.ToTable("NavigationItems");
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("47c65afa-8621-4206-ad80-d065774bc33a"),
+                            AccessFailedCount = 0,
+                            Active = false,
+                            ConcurrencyStamp = "f97e49c4-0e41-4de6-a742-917c6437fd9c",
+                            EmailConfirmed = false,
+                            FirstName = "AdminFirstName",
+                            Language = 0,
+                            LastName = "AdminLastName",
+                            LockoutEnabled = false,
+                            MainRole = "ADMIN",
+                            NormalizedUserName = "ADMIN",
+                            PasswordHash = "AQAAAAIAAYagAAAAEN0gV+qjdHe1XcBjbzjExdjLzpnihvr+bgjXwSGZmQOSHzIYPi/0CkleCeIQ0RqA8Q==",
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            UserName = "admin"
+                        },
+                        new
+                        {
+                            Id = new Guid("3c32cbde-34f1-497a-a332-0d98187ce761"),
+                            AccessFailedCount = 0,
+                            Active = false,
+                            ConcurrencyStamp = "f70eb5de-bfc9-4e8c-84f1-e445f76a7aa8",
+                            EmailConfirmed = false,
+                            FirstName = "UserFirstName",
+                            Language = 0,
+                            LastName = "UserLastName",
+                            LockoutEnabled = false,
+                            MainRole = "USER",
+                            NormalizedUserName = "USER",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPUsoWcx4HATG2SmYWxtMfZxtyGWoXxNnTGSHTnd/u7RSbtESRDI72xfv6T54KSK6w==",
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            UserName = "user"
+                        },
+                        new
+                        {
+                            Id = new Guid("4bdf852e-b8f5-48d4-9213-7b142224f6b0"),
+                            AccessFailedCount = 0,
+                            Active = false,
+                            ConcurrencyStamp = "29549ecc-2fcb-4635-b989-d74d4cc35d2a",
+                            EmailConfirmed = false,
+                            FirstName = "StudentFirstName",
+                            Language = 0,
+                            LastName = "StudentLastName",
+                            LockoutEnabled = false,
+                            MainRole = "STUDENT",
+                            NormalizedUserName = "STUDENT",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHLZHQhIqoJGIltwkM/hwrNtcnPfEklcLmaJG753nk2zq3nO5CNIXvhemige6Y8bSQ==",
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            UserName = "student"
+                        },
+                        new
+                        {
+                            Id = new Guid("cdc70f49-6ec5-4cc3-bc6b-ec0d21652675"),
+                            AccessFailedCount = 0,
+                            Active = false,
+                            ConcurrencyStamp = "d9cda0b2-0dbe-45e6-8442-51cbe34bd257",
+                            EmailConfirmed = false,
+                            FirstName = "TeacherFirstName",
+                            Language = 0,
+                            LastName = "TeacherLastName",
+                            LockoutEnabled = false,
+                            MainRole = "TEACHER",
+                            NormalizedUserName = "TEACHER",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJ+0j1xvgdDj667aDfX4KvVwUhHfhx8FnAYov/f08ZWZT1czD3l+XXMuTmQNUtQzcg==",
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            UserName = "teacher"
+                        });
                 });
 
             modelBuilder.Entity("Auth.Domain.Entities.StatusUser", b =>
@@ -336,6 +392,28 @@ namespace Auth.Infrastructure.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = new Guid("47c65afa-8621-4206-ad80-d065774bc33a"),
+                            RoleId = new Guid("f8a8d71c-1d62-4697-a4cb-989df1d76866")
+                        },
+                        new
+                        {
+                            UserId = new Guid("3c32cbde-34f1-497a-a332-0d98187ce761"),
+                            RoleId = new Guid("24da146e-0354-43bd-9e2a-dac1bf5c04fe")
+                        },
+                        new
+                        {
+                            UserId = new Guid("4bdf852e-b8f5-48d4-9213-7b142224f6b0"),
+                            RoleId = new Guid("8bc0903b-5f78-4723-a492-a2a825ae44f7")
+                        },
+                        new
+                        {
+                            UserId = new Guid("cdc70f49-6ec5-4cc3-bc6b-ec0d21652675"),
+                            RoleId = new Guid("812c4430-2c72-49e7-8569-7abb5b2adf76")
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
@@ -355,20 +433,6 @@ namespace Auth.Infrastructure.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("Auth.Domain.Entities.ApplicationRole", b =>
-                {
-                    b.HasOne("Auth.Domain.Entities.NavigationItem", null)
-                        .WithMany("Roles")
-                        .HasForeignKey("NavigationItemId");
-                });
-
-            modelBuilder.Entity("Auth.Domain.Entities.NavigationItem", b =>
-                {
-                    b.HasOne("Auth.Domain.Entities.NavigationItem", null)
-                        .WithMany("Items")
-                        .HasForeignKey("NavigationItemId");
                 });
 
             modelBuilder.Entity("Auth.Domain.Entities.StatusUser", b =>
@@ -436,13 +500,6 @@ namespace Auth.Infrastructure.Migrations
             modelBuilder.Entity("Auth.Domain.Entities.ApplicationUser", b =>
                 {
                     b.Navigation("StatusUser");
-                });
-
-            modelBuilder.Entity("Auth.Domain.Entities.NavigationItem", b =>
-                {
-                    b.Navigation("Items");
-
-                    b.Navigation("Roles");
                 });
 #pragma warning restore 612, 618
         }

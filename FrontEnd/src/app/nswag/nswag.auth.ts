@@ -582,7 +582,7 @@ export interface IUserClient {
     me(): Observable<UserDto>;
     getAll(dataTableMetaData: PrimeTableMetaData): Observable<QueryResultOfUserDto>;
     myLanguage(): Observable<LanguageDto>;
-    changeMyLanguage(lang: string | undefined): Observable<LanguageDto>;
+    changeMyLanguage(language: Languages | undefined): Observable<LanguageDto>;
 }
 
 @Injectable({
@@ -746,12 +746,12 @@ export class UserClient implements IUserClient {
         return _observableOf(null as any);
     }
 
-    changeMyLanguage(lang: string | undefined): Observable<LanguageDto> {
+    changeMyLanguage(language: Languages | undefined): Observable<LanguageDto> {
         let url_ = this.baseUrl + "/api/auth/User/ChangeMyLanguage?";
-        if (lang === null)
-            throw new Error("The parameter 'lang' cannot be null.");
-        else if (lang !== undefined)
-            url_ += "lang=" + encodeURIComponent("" + lang) + "&";
+        if (language === null)
+            throw new Error("The parameter 'language' cannot be null.");
+        else if (language !== undefined)
+            url_ += "language=" + encodeURIComponent("" + language) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

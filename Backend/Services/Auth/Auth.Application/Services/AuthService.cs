@@ -381,8 +381,9 @@ public class AuthService(
                     new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
                     new Claim(ClaimTypes.IsPersistent,RememberMe?"1":"0"),
                     new Claim(ClaimTypes.Role,user.MainRole??"user"),
-                    new Claim(ClaimTypes.Expiration,DateTime.Now.AddHours(2).ToString()),
+                    new Claim(ClaimTypes.Expiration,DateTime.Now.AddMinutes(1).ToString()),
                     new Claim(ClaimTypes.Country,user.Language.ToString()),
+                    new Claim("FULLNAME",user.FullName)
                 };
         foreach (var role in roles)
         {

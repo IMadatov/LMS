@@ -22,7 +22,9 @@ public static class HelperUserProfile
             Id = Guid.Parse(enumerable.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value),
             UserName = enumerable.FirstOrDefault(x => x.Type == ClaimTypes.Name).Value,
             Language = (Languages)Enum.Parse(typeof(Languages), enumerable.FirstOrDefault(x => x.Type == ClaimTypes.Country).Value, true) | Languages.ENGLISH,
-            Role = enumerable.FirstOrDefault(x => x.Type == ClaimTypes.Role).Value
+            Role = enumerable.FirstOrDefault(x => x.Type == ClaimTypes.Role).Value,
+            Fullname=enumerable.FirstOrDefault(x=>x.Type=="FULLNAME").Value,
+
         };
 
         return profile;

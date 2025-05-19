@@ -13,7 +13,7 @@ public static class InfrastructureServiceRegistration
     {
         services.AddDbContext<TranslationDbContext>(options =>
         {
-            options.UseSqlServer(configuration.GetConnectionString("Transloco"));
+            options.UseSqlServer(configuration.GetConnectionString("TranslationConnectionString"));
         });
         return services;
     }

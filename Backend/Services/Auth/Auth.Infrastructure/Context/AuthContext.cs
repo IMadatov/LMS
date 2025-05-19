@@ -29,6 +29,8 @@ public class AuthContext(DbContextOptions options) : IdentityDbContext<Applicati
             .HasForeignKey<StatusUser>(su => su.ApplicationUserId);
 
         base.OnModelCreating(builder);
+
+        builder.ApplyConfigurationsFromAssembly(typeof(AuthContextSeed).Assembly).Seed();
     }
 
     public DbSet<StatusUser> StatusUsers { get; set; }

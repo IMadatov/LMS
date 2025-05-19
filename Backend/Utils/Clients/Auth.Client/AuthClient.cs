@@ -1089,11 +1089,11 @@ namespace Clients.Auth.Client
         System.Threading.Tasks.Task<LanguageDto> MyLanguageAsync(System.Threading.CancellationToken cancellationToken);
 
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<LanguageDto> ChangeMyLanguageAsync(string lang);
+        System.Threading.Tasks.Task<LanguageDto> ChangeMyLanguageAsync(Languages? language);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<LanguageDto> ChangeMyLanguageAsync(string lang, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<LanguageDto> ChangeMyLanguageAsync(Languages? language, System.Threading.CancellationToken cancellationToken);
 
     }
 
@@ -1365,14 +1365,14 @@ namespace Clients.Auth.Client
         }
 
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<LanguageDto> ChangeMyLanguageAsync(string lang)
+        public virtual System.Threading.Tasks.Task<LanguageDto> ChangeMyLanguageAsync(Languages? language)
         {
-            return ChangeMyLanguageAsync(lang, System.Threading.CancellationToken.None);
+            return ChangeMyLanguageAsync(language, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<LanguageDto> ChangeMyLanguageAsync(string lang, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<LanguageDto> ChangeMyLanguageAsync(Languages? language, System.Threading.CancellationToken cancellationToken)
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1389,9 +1389,9 @@ namespace Clients.Auth.Client
                     // Operation Path: "api/auth/User/ChangeMyLanguage"
                     urlBuilder_.Append("api/auth/User/ChangeMyLanguage");
                     urlBuilder_.Append('?');
-                    if (lang != null)
+                    if (language != null)
                     {
-                        urlBuilder_.Append(System.Uri.EscapeDataString("lang")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(lang, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                        urlBuilder_.Append(System.Uri.EscapeDataString("language")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(language, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
                     }
                     urlBuilder_.Length--;
 

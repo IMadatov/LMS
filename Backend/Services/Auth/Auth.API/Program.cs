@@ -73,7 +73,6 @@ async void Configure(WebApplication app)
     .MainConfigure()
     .AuthApplicationConfig()
     .MainConfigurationMigrationAsync();
-
 }
 
 

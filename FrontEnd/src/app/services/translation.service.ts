@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslocoService } from '@jsverse/transloco';
-import { UserClient } from '../nswag/nswag.auth';
+import { Languages, UserClient } from '../nswag/nswag.auth';
 
 @Injectable({
   providedIn: 'root'
@@ -72,7 +72,7 @@ export class TranslationService {
 
   ChangeLanguageUser(){
 
-    this.userClient.changeMyLanguage(this.currentLanguage?.code||"en").subscribe({
+    this.userClient.changeMyLanguage(Languages.ENGLISH).subscribe({
       next:(value)=>{
         this.translocoService.setActiveLang(value.language||"en");
       }});
